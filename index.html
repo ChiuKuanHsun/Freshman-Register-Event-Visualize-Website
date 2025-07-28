@@ -346,6 +346,16 @@
             margin-right: 0.5rem;
         }
 
+        .modal-body a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .modal-body a:hover {
+            text-decoration: underline;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             body { padding: 0.5rem; }
@@ -388,21 +398,21 @@
 
     <script>
         const eventData = [
-          { "id": "residential-college-apply-1", "title": "申請清華書院(第一階段)", "startDate": "2025-05-12T12:00:00", "endDate": "2025-07-10T12:00:00", "category": "Housing", "targetAudience": "全體大一新生", "details": "有意申請厚德、載物、天下書院者，需至書院網站報名。", "responsibleUnit": "清華書院 / 分機:62559" },
+          { "id": "residential-college-apply-1", "title": "申請清華書院(第一階段)", "startDate": "2025-05-12T12:00:00", "endDate": "2025-07-10T12:00:00", "category": "Housing", "targetAudience": "全體大一新生", "details": "有意申請厚德、載物、天下書院者，需至[書院網站](https://www.nthu.edu.tw/)報名。", "responsibleUnit": "清華書院 / 分機:62559" },
           { "id": "reserve-admission", "title": "申請保留入學資格", "startDate": "2025-07-01T00:00:00", "endDate": "2025-08-29T23:59:59", "category": "Academic", "targetAudience": "因重病、懷孕等特殊事故無法當學年入學之新生。", "details": "需檢具有關證明於7月1日至8月29日止向教務處申請保留入學資格。", "responsibleUnit": "註冊組" },
           { "id": "residential-college-register-1", "title": "清華書院第一階段錄取報到", "startDate": "2025-07-18T12:00:00", "endDate": "2025-07-24T23:59:00", "category": "Housing", "targetAudience": "第一階段錄取清華書院之新生", "details": "錄取者須完成線上報到，逾期視同放棄。", "responsibleUnit": "清華書院 / 分機:62559" },
-          { "id": "online-reg-non-exam", "title": "網路報到(非分發入學)", "startDate": "2025-08-01T10:00:00", "endDate": "2025-08-07T23:59:59", "category": "Registration", "targetAudience": "特殊選才、繁星推薦、申請入學等非分發入學之新生。", "details": "上網核對基本資料、填寫其他資料並上傳高中畢業證書。未於期限內完成填寫者，學生證將不顯示英文姓名。※此階段亦須完成兵役、健康資料登錄及各項問卷填寫。", "responsibleUnit": "註冊組 / 分機:31390" },
+          { "id": "online-reg-non-exam", "title": "網路報到(非分發入學)", "startDate": "2025-08-01T10:00:00", "endDate": "2025-08-07T23:59:59", "category": "Registration", "targetAudience": "特殊選才、繁星推薦、申請入學等非分發入學之新生。", "details": "上網核對基本資料、填寫其他資料並上傳高中畢業證書。未於期限內完成填寫者，學生證將不顯示英文姓名。[校務資訊系統/新生報到](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "註冊組 / 分機:31390" },
           { "id": "fee-reduction", "title": "辦理學雜費減免", "startDate": "2025-08-13T00:00:00", "endDate": "2025-08-19T23:59:59", "category": "Financial", "targetAudience": "符合身障、原住民、低收/中低收入戶等資格之學生。", "details": "請至校務資訊系統/學雜費減免作業填寫列印申請表，並線上繳件。", "responsibleUnit": "生輔組 / 分機:34649" },
-          { "id": "online-reg-exam", "title": "網路報到(分發入學)", "startDate": "2025-08-14T10:00:00", "endDate": "2025-08-18T23:59:59", "category": "Registration", "targetAudience": "分發入學之新生。", "details": "上網核對基本資料、填寫其他資料並上傳高中畢業證書。未於期限內完成填寫者，學生證將不顯示英文姓名。※此階段亦須完成兵役、健康資料登錄及各項問卷填寫。", "responsibleUnit": "註冊組 / 分機:31390" },
-          { "id": "dorm-application", "title": "申請宿舍", "startDate": "2025-08-15T16:00:00", "endDate": "2025-08-18T10:00:00", "category": "Housing", "targetAudience": "全體大一新生 (未錄取書院者)。", "details": "凡未辦理網路登記住宿申請者視同放棄住宿。", "responsibleUnit": "住宿組 / 分機:34706" },
+          { "id": "online-reg-exam", "title": "網路報到(分發入學)", "startDate": "2025-08-14T10:00:00", "endDate": "2025-08-18T23:59:59", "category": "Registration", "targetAudience": "分發入學之新生。", "details": "上網核對基本資料、填寫其他資料並上傳高中畢業證書。未於期限內完成填寫者，學生證將不顯示英文姓名。[校務資訊系統/新生報到](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "註冊組 / 分機:31390" },
+          { "id": "dorm-application", "title": "申請宿舍", "startDate": "2025-08-15T16:00:00", "endDate": "2025-08-18T10:00:00", "category": "Housing", "targetAudience": "全體大一新生 (未錄取書院者)。", "details": "凡未辦理網路登記住宿申請者視同放棄住宿。[學生宿舍規則](https://sthousing.site.nthu.edu.tw/p/406-1254-105021,r1559.php?Lang=zh-tw)", "responsibleUnit": "住宿組 / 分機:34706" },
           { "id": "course-selection-1", "title": "新生選課(第一階段)", "startDate": "2025-08-18T12:00:00", "endDate": "2025-08-20T09:00:00", "category": "Academic", "targetAudience": "全體大一新生", "details": "網路開放時間為每日中午12:00至次日上午09:00止。可於此階段加選【開箱清華園】微學分課程。", "responsibleUnit": "課務組 / 分機:31393-5" },
           { "id": "print-payment-bill", "title": "列印學雜費繳費單", "startDate": "2025-08-21T00:00:00", "endDate": "2025-09-01T23:59:59", "category": "Financial", "targetAudience": "全體大一新生", "details": "請同學至校務資訊系統/新生報到自行列印。辦理保留入學、休學及就學貸款同學，請勿繳費。", "responsibleUnit": "出納組 / 分機:31364" },
           { "id": "credit-waiver", "title": "辦理學分抵免", "startDate": "2025-08-01T00:00:00", "endDate": "2025-08-22T23:59:59", "category": "Academic", "targetAudience": "重考生、重新申請入學之新生等符合資格者。", "details": "務必於8月22日(五)前辦理。至「校務資訊系統」→「抵免學分」申請。", "responsibleUnit": "註冊組 / 分機:31390" },
           { "id": "student-loan-online", "title": "就學貸款(學校系統登錄)", "startDate": "2025-08-21T09:00:00", "endDate": "2025-09-01T16:00:00", "category": "Financial", "targetAudience": "欲申請就學貸款之學生。", "details": "需先至臺灣銀行各分行辦理對保手續。再至校務資訊系統/就學貸款登錄申請資料。", "responsibleUnit": "生輔組 / 分機:34660" },
-          { "id": "dorm-check-in", "title": "宿舍入住", "startDate": "2025-08-24T08:30:00", "endDate": "2025-08-25T16:00:00", "category": "Housing", "targetAudience": "全體住宿新生。", "details": "至各新生齋舍報到。", "responsibleUnit": "住宿組 / 分機:34706" },
-          { "id": "orientation-camp", "title": "新生領航營", "startDate": "2025-08-26T00:00:00", "endDate": "2025-08-27T23:59:59", "category": "Activity", "targetAudience": "全體大一新生", "details": "詳細資訊請參閱「新生資訊網」。", "responsibleUnit": "生輔組 / 分機:34647" },
+          { "id": "dorm-check-in", "title": "宿舍入住", "startDate": "2025-08-24T08:30:00", "endDate": "2025-08-25T16:00:00", "category": "Housing", "targetAudience": "全體住宿新生。", "details": "至各新生齋舍報到。[學生宿舍規則](https://sthousing.site.nthu.edu.tw/p/406-1254-105021,r1559.php?Lang=zh-tw)", "responsibleUnit": "住宿組 / 分機:34706" },
+          { "id": "orientation-camp", "title": "新生領航營", "startDate": "2025-08-26T00:00:00", "endDate": "2025-08-27T23:59:59", "category": "Activity", "targetAudience": "全體大一新生", "details": "詳細資訊請參閱[新生資訊網](https://www.nthu-freshmen.com/)。", "responsibleUnit": "生輔組 / 分機:34647" },
           { "id": "health-check", "title": "新生健康檢查", "startDate": "2025-08-27T08:00:00", "endDate": "2025-08-27T17:00:00", "category": "Registration", "targetAudience": "全體大一新生", "details": "健檢日為8月27日，請依註冊程序單所訂時間至校友體育館健檢。未完成健檢導致無法完成註冊程序者，須自負相關之責。", "responsibleUnit": "衛生保健組 / 分機:43000" },
-          { "id": "student-loan-submit", "title": "就學貸款資料繳件", "startDate": "2025-08-29T09:00:00", "endDate": "2025-09-01T16:00:00", "category": "Financial", "targetAudience": "已完成線上登錄之就學貸款申請者。", "details": "攜帶就學貸款申請表、臺灣銀行撥款通知書第2聯等文件至水木生活中心二樓生輔組會議室繳件。※繳件日僅有8/29(五)及9/1(一)兩天，受理時間為上午9:00~12:30及下午1:00~4:00", "responsibleUnit": "生輔組 / 分機:34660" },
+          { "id": "student-loan-submit", "title": "就學貸款資料繳件", "startDate": "2025-08-29T09:00:00", "endDate": "2025-09-01T16:00:00", "category": "Financial", "targetAudience": "已完成線上登錄之就學貸款申請者。", "details": "攜帶就學貸款申請表、臺灣銀行撥款通知書第2聯等文件至水木生活中心二樓生輔組會議室繳件。", "responsibleUnit": "生輔組 / 分機:34660" },
           { "id": "tuition-payment", "title": "繳交學雜費", "startDate": "2025-08-21T00:00:00", "endDate": "2025-09-01T23:59:59", "category": "Financial", "targetAudience": "全體大一新生 (未辦理學貸、休學者)。", "details": "學生應於本校行事曆規定之上課開始日(含)前繳交各項應繳費用。繳費完成後即完成註冊。", "responsibleUnit": "出納組 / 分機:31364" },
           { "id": "class-start", "title": "正式上課日", "startDate": "2025-09-01T08:00:00", "endDate": "2025-09-01T23:59:59", "category": "Academic", "targetAudience": "全體大一新生", "details": "9月1日(星期一)開始上課。", "responsibleUnit": "教務處" },
           {"id": "parents-symposium", "title": "新生家長座談會", "startDate": "2025-08-24T14:00:00", "endDate": "2025-08-24T16:00:00", "category": "Activity", "targetAudience": "新生家長",  "details": "歡迎各位學生家長蒞臨，深入了解學校的學習環境和生活設施。地點：校本部旺宏館國際會議廳", "responsibleUnit": "生輔組 / 分機:34647 "}
@@ -457,6 +467,7 @@
             app.innerHTML = `
                 <header>
                     <h1>國立清華大學 114學年度新生註冊時程<br><a href="https://registra.site.nthu.edu.tw/p/406-1211-288857,r219.php?Lang=zh-tw">（詳情請見清大註冊組）</a> <a href="https://registra.site.nthu.edu.tw/var/file/211/1211/img/2979/557596209.pdf">（資料來源PDF檔）</a></h1>
+                    <p>※實際日程請以清大官方公告為準，本網站資料皆為作者自行整理，不負任何相關責任※</p>
                 </header>
                 <main>
                     <aside class="overview-section">
@@ -722,15 +733,17 @@
             `).join('');
         }
 
+
         function showModal(eventId) {
             const event = eventData.find(e => e.id === eventId);
             if (!event) return;
 
+            const detailsHtml = event.details.replace(/\[(.*?)\]\((.*?)\)/g, '<a style="color:blue;" href="$2" target="_blank" rel="noopener noreferrer"││>$1</a>');
             document.getElementById('modal-title').textContent = event.title;
             document.getElementById('modal-body').innerHTML = `
                 <p><strong>辦理期間:</strong> ${formatDisplayDate(event.startDate)} ${formatTime(event.startDate)} - ${formatDisplayDate(event.endDate)} ${formatTime(event.endDate)}</p>
                 <p><strong>適用對象:</strong> ${event.targetAudience}</p>
-                <p><strong>重要說明:</strong> ${event.details}</p>
+                <p><strong>重要說明:</strong> ${detailsHtml}</p>
                 <p><strong>負責單位:</strong> ${event.responsibleUnit}</p>
             `;
             document.getElementById('event-modal').classList.add('visible');
