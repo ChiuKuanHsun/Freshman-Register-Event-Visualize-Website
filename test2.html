@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國立清華大學114學年度新生註冊時程</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- New Styles from index.html --- */
+        :root {
+            --color-primary: #53267F;
+            --color-text: #333;
+            --color-background: #f8f9fa;
+            --color-light-gray: #e9ecef;
+            --color-white: #fff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+            --border-radius: 4px;
+            --event-bar-height: 22px;
+            --event-bar-v-margin: 2px;
+
+            --cat-registration: #007bff;
+            --cat-academic: #28a745;
+            --cat-housing: #fd7e14;
+            --cat-financial: #dc3545;
+            --cat-activity: #17a2b8;
+        }
+        header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-light-gray);
+            margin-bottom: 1.2rem;
+        }
+        body {
+            font-family: 'Noto Sans TC', 'system-ui', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Layout for the new calendar view */
+        #calendar-view-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
+        }
+
+        @media (min-width: 992px) {
+            #calendar-view-content {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        .overview-section, .calendar-section {
+            background: var(--color-white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .calendar-section {
+            position: relative;
+        }
+
+        .overview-section h2, .calendar-section h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: var(--color-primary);
+        }
+
+        /* Overview Section */
+        .overview-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .overview-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        .overview-item.done {
+            opacity: 0.5;
+        }
+        
+        .overview-item.done .item-title {
+            text-decoration: line-through;
+        }
+
+        .overview-item input[type="checkbox"] {
+            margin-right: 0.75rem;
+            min-width: 16px;
+            height: 16px;
+        }
+
+        .item-title {
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+
+        .category-tag {
+            padding: 0.2em 0.6em;
+            border-radius: var(--border-radius);
+            color: var(--color-white);
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        /* Calendar Section */
+        .calendar-container {
+            position: relative;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-controls button {
+            background: none;
+            border: 1px solid var(--color-light-gray);
+            border-radius: var(--border-radius);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .calendar-controls button:hover {
+            background-color: var(--color-light-gray);
+        }
+
+        #current-month-year {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 1px;
+            position: relative;
+            background-color: var(--color-light-gray);
+            border: 1px solid var(--color-light-gray);
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: bold;
+            color: var(--color-primary);
+            padding: 0.5rem 0;
+            background-color: var(--color-white);
+        }
+
+        .calendar-day {
+            background-color: #fff;
+            position: relative;
+            padding: 4px;
+            padding-top: 30px;
+            min-height: 120px;
+            box-sizing: border-box;
+        }
+        
+        .calendar-day.other-month {
+            background-color: #fdfdff;
+        }
+
+        .calendar-day.other-month .day-number {
+            opacity: 0.4;
+        }
+
+        .day-number {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+        
+        .calendar-day.today .day-number {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        #event-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .event-bar {
+            font-size: 0.75rem;
+            padding: 0 8px;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            position: absolute;
+            height: var(--event-bar-height);
+            line-height: var(--event-bar-height);
+            box-sizing: border-box;
+            pointer-events: auto;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-bar.start-cap {
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        .event-bar.end-cap {
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+        }
+        
+        .event-bar:hover {
+            opacity: 0.8;
+            z-index: 3;
+        }
+        
+        .event-bar.done {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .calendar-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-light-gray);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .legend-color-box {
+            width: 16px;
+            height: 16px;
+            border-radius: var(--border-radius);
+            margin-right: 0.5rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            width: 90%;
+            max-width: 600px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-light-gray);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-body p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .modal-body strong {
+            color: var(--color-primary);
+            margin-right: 0.5rem;
+        }
+
+        .modal-body a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .modal-body a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .event-bar { font-size: 0.7rem; height: 20px; line-height: 20px; }
+            .calendar-header { font-size: 0.8rem; }
+            .modal-content { padding: 1.5rem; }
+            .modal-header h3 { font-size: 1.3rem; }
+        }
+        
+        @media (max-width: 480px) {
+            #calendar-view-content { grid-template-columns: 1fr; }
+            .calendar-grid { gap: 1px; }
+            .calendar-day { min-height: 80px; padding-top: 25px; }
+            .day-number { font-size: 0.75rem; }
+            .event-bar { display: none; } /* Hide event text on very small screens */
+            .dots-container { 
+                position: absolute;
+                bottom: 4px;
+                left: 0;
+                right: 0;
+                text-align: center;
+            }
+            .event-dot { /* Show a dot instead */
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                margin: 0 1px;
+            }
+        }
+
+        /* --- Styles for Full List View (Untouched) --- */
+        .completed {
+            opacity: 0.5;
+        }
+        .completed .task-title {
+            text-decoration: line-through;
+        }
+        .task-details {
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .task-details.open {
+            max-height: 1000px;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="main-container container mx-auto p-4 md:p-8">
+        <header>
+            <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-primary)]">國立清華大學114學年度新生註冊時程<br><a href="https://registra.site.nthu.edu.tw/p/406-1211-288857,r219.php?Lang=zh-tw" style="text-decoration: underline; color: #007bff; font-size: large;">（詳情請見清大註冊組）</a> <a href="https://registra.site.nthu.edu.tw/var/file/211/1211/img/2979/557596209.pdf" style="text-decoration: underline; color: #007bff; font-size: large;">（資料來源PDF檔）</a></h1>
+            <p class="text-gray-500 mt-2">一個幫助你輕鬆掌握所有關鍵事項的工具 </p>
+            <p class="text-gray-500 mt-2">※實際日程請以清大官方公告為準，本網站資料皆為作者自行整理，不負任何相關責任※ </p>
+        </header>
+
+        <!-- View Switcher (Untouched) -->
+        <div class="flex justify-center mb-8 bg-gray-200 rounded-lg p-1 max-w-sm mx-auto">
+            <button id="btn-calendar-view" class="w-1/2 p-2 rounded-md text-sm font-medium focus:outline-none transition-colors duration-300">日曆模式</button>
+            <button id="btn-list-view" class="w-1/2 p-2 rounded-md text-sm font-medium focus:outline-none transition-colors duration-300">完整列表模式</button>
+        </div>
+
+        <!-- Calendar View (Replaced) -->
+        <div id="calendar-view">
+            <div id="calendar-view-content">
+                <aside class="overview-section">
+                    <h2 id="overview-title" class="text-2xl md:text-3xl font-bold text-[var(--color-primary)]"></h2><br>
+                    <ul class="overview-list" id="overview-list"></ul>
+                </aside>
+                <section class="calendar-section">
+                    <div class="calendar-controls">
+                        <button id="prev-month-btn">‹</button>
+                        <h2 id="current-month-year"></h2>
+                        <button id="next-month-btn">›</button>
+                    </div>
+                    <div class="calendar-container">
+                        <div class="calendar-grid" id="calendar-grid"></div>
+                        <div id="event-layer"></div>
+                    </div>
+                    <div class="calendar-legend" id="calendar-legend"></div>
+                </section>
+            </div>
+            <div class="modal-overlay" id="event-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modal-title"></h3>
+                        <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body" id="modal-body"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full List View (Untouched) -->
+        <div id="list-view" class="hidden" style="max-width: 1200px; margin-left: auto; margin-right: auto;">
+             <div class="mb-6">
+                <input type="search" id="search-box" placeholder="搜尋待辦事項 (例如：宿舍、免修)..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a38db8] focus:border-[#53267F] transition">
+            </div>
+            <div id="list-container" class="space-y-8">
+                <!-- Task categories and items will be injected here by original JS -->
+            </div>
+        </div>
+        <footer style="font-size: small; margin-top: 10px; margin-bottom: -20px;">© 2025 國立清華大學114學年度新生註冊時程一覽表. Made by KUAN HSUN & Gemini</footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DATA (SHARED) ---
+        const eventsData = [
+            { "id": "residential-college-apply-1", "title": "申請清華書院(第一階段)", "startDate": "2025-05-12T12:00:00", "endDate": "2025-07-10T12:00:00", "category": "Housing", "targetAudience": "全體大一新生", "details": "有意申請厚德、載物、天下書院者，需至[書院網站](http://rcollege.site.nthu.edu.tw/)報名。", "responsibleUnit": "清華書院 / 分機:62559" },
+            { "id": "reserve-admission", "title": "申請保留入學資格", "startDate": "2025-07-01T00:00:00", "endDate": "2025-08-29T23:59:59", "category": "Academic", "targetAudience": "因重病、懷孕等特殊事故無法當學年入學之新生。", "details": "需檢具有關證明於7月1日至8月29日止向教務處申請保留入學資格。", "responsibleUnit": "註冊組" },
+            { "id": "residential-college-register-1", "title": "清華書院第一階段錄取報到", "startDate": "2025-07-18T12:00:00", "endDate": "2025-07-24T23:59:00", "category": "Housing", "targetAudience": "第一階段錄取清華書院之新生", "details": "錄取者須完成線上報到，逾期視同放棄。", "responsibleUnit": "清華書院 / 分機:62559" },
+            { "id": "online-reg-non-exam", "title": "網路報到(非分發入學)", "startDate": "2025-08-01T10:00:00", "endDate": "2025-08-07T23:59:59", "category": "Registration", "targetAudience": "特殊選才、繁星推薦、申請入學等非分發入學之新生。", "details": "上網核對基本資料、上傳學歷文件。此階段亦須完成兵役、健康資料登錄及各項問卷填寫。若需更改姓名，務必於8/7前將戶籍謄本寄達註冊組。[校務資訊系統/新生報到](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "註冊組 / 分機:31390" },
+            { "id": "fee-reduction", "title": "辦理學雜費減免", "startDate": "2025-08-13T00:00:00", "endDate": "2025-08-19T23:59:59", "category": "Financial", "targetAudience": "符合身障、原住民、低收/中低收入戶等資格之學生。", "details": "請至校務資訊系統/學雜費減免作業填寫列印申請表，並線上繳件。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34649" },
+            { "id": "online-reg-exam", "title": "網路報到(分發入學)", "startDate": "2025-08-14T10:00:00", "endDate": "2025-08-18T23:59:59", "category": "Registration", "targetAudience": "分發入學之新生。", "details": "上網核對基本資料、上傳學歷文件。此階段亦須完成兵役、健康資料登錄及各項問卷填寫。若需更改姓名，務必於8/18前將戶籍謄本寄達註冊組。[校務資訊系統/新生報到](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "註冊組 / 分機:31390" },
+            { "id": "dorm-application", "title": "申請宿舍", "startDate": "2025-08-15T16:00:00", "endDate": "2025-08-18T10:00:00", "category": "Housing", "targetAudience": "全體大一新生 (未錄取書院者)。", "details": "凡未辦理網路登記住宿申請者視同放棄住宿。[學生宿舍規則](https://sthousing.site.nthu.edu.tw/p/406-1254-105021,r1559.php?Lang=zh-tw)", "responsibleUnit": "住宿組 / 分機:34706" },
+            { "id": "course-selection-1", "title": "新生選課(第一階段)", "startDate": "2025-08-18T12:00:00", "endDate": "2025-08-20T09:00:00", "category": "Academic", "targetAudience": "全體大一新生", "details": "網路開放時間為每日中午12:00至次日上午09:00止。可於此階段加選【開箱清華園】微學分課程。", "responsibleUnit": "課務組 / 分機:31393-5" },
+            { "id": "print-payment-bill", "title": "列印學雜費繳費單", "startDate": "2025-08-21T00:00:00", "endDate": "2025-09-01T23:59:59", "category": "Financial", "targetAudience": "全體大一新生", "details": "請同學至校務資訊系統/新生報到自行列印。辦理保留入學、休學及就學貸款同學，請勿繳費。", "responsibleUnit": "出納組 / 分機:31364" },
+            { "id": "credit-waiver", "title": "辦理學分抵免", "startDate": "2025-08-01T00:00:00", "endDate": "2025-08-22T23:59:59", "category": "Academic", "targetAudience": "重考生、重新申請入學之新生等符合資格者。", "details": "務必於8月22日(五)前辦理。至「校務資訊系統」→「抵免學分」申請。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "註冊組 / 分機:31390" },
+            { "id": "student-loan-online", "title": "就學貸款(學校系統登錄)", "startDate": "2025-08-21T09:00:00", "endDate": "2025-09-01T16:00:00", "category": "Financial", "targetAudience": "欲申請就學貸款之學生。", "details": "需先至臺灣銀行各分行辦理對保手續。再至校務資訊系統/就學貸款登錄申請資料。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34660" },
+            { "id": "dorm-check-in", "title": "宿舍入住", "startDate": "2025-08-24T08:30:00", "endDate": "2025-08-25T16:00:00", "category": "Housing", "targetAudience": "全體住宿新生。", "details": "至各新生齋舍報到。[學生宿舍規則](https://sthousing.site.nthu.edu.tw/p/406-1254-105021,r1559.php?Lang=zh-tw)", "responsibleUnit": "住宿組 / 分機:34706" },
+            { "id": "orientation-camp", "title": "新生領航營", "startDate": "2025-08-26T00:00:00", "endDate": "2025-08-27T23:59:59", "category": "Activity", "targetAudience": "全體大一新生", "details": "詳細資訊請參閱[新生資訊網](https://www.nthu-freshmen.com/)。", "responsibleUnit": "生輔組 / 分機:34647" },
+            { "id": "health-check", "title": "新生健康檢查", "startDate": "2025-08-27T08:00:00", "endDate": "2025-08-27T17:00:00", "category": "Registration", "targetAudience": "全體大一新生", "details": "健檢日為8月27日，請依註冊程序單所訂時間至校友體育館健檢。未完成健檢導致無法完成註冊程序者，須自負相關之責。", "responsibleUnit": "衛生保健組 / 分機:43000" },
+            { "id": "student-loan-submit", "title": "就學貸款資料繳件", "startDate": "2025-08-29T09:00:00", "endDate": "2025-09-01T16:00:00", "category": "Financial", "targetAudience": "已完成線上登錄之就學貸款申請者。", "details": "攜帶就學貸款申請表及臺銀撥款通知書第2聯等文件至水木生活中心二樓生輔組會議室繳件。請注意，繳件日僅有8/29(五)及9/1(一)兩天，受理時間為上午9:00~12:30及下午1:00~4:00。", "responsibleUnit": "生輔組 / 分機:34660" },
+            { "id": "tuition-payment", "title": "繳交學雜費", "startDate": "2025-08-21T00:00:00", "endDate": "2025-09-01T23:59:59", "category": "Financial", "targetAudience": "全體大一新生 (未辦理學貸、休學者)。", "details": "學生應於本校行事曆規定之上課開始日(含)前繳交各項應繳費用。繳費完成後即完成註冊。", "responsibleUnit": "出納組 / 分機:31364" },
+            { "id": "class-start", "title": "正式上課日", "startDate": "2025-09-01T08:00:00", "endDate": "2025-09-01T23:59:59", "category": "Academic", "targetAudience": "全體大一新生", "details": "9月1日(星期一)開始上課。", "responsibleUnit": "教務處" },
+            { "id": "parents-symposium", "title": "新生家長座談會", "startDate": "2025-08-24T14:00:00", "endDate": "2025-08-24T16:00:00", "category": "Activity", "targetAudience": "新生家長", "details": "歡迎各位學生家長蒞臨，深入了解學校的學習環境和生活設施。地點：校本部旺宏館國際會議廳", "responsibleUnit": "生輔組 / 分機:34647" },
+            { "id": "civil-servant-benefit-online", "title": "公教遺族就學優待(線上申請)", "startDate": "2025-08-13T00:00:00", "endDate": "2025-08-19T23:59:59", "category": "Financial", "targetAudience": "符合公教遺族資格之學生", "details": "欲申請者請先至生輔組網頁下載申請書，並至〈校務資訊系統/學雜費減免作業〉完成減免申請。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34649" },
+            { "id": "civil-servant-benefit-submit", "title": "公教遺族就學優待(紙本繳件)", "startDate": "2025-08-20T00:00:00", "endDate": "2025-09-05T23:59:59", "category": "Financial", "targetAudience": "已完成線上申請公教遺族就學優待之學生", "details": "於9月5日(五)前，將教育部軍公教遺族就學優待申請書等相關紙本文件繳交至生輔組。", "responsibleUnit": "生輔組 / 分機:34649" }
+        ].map(e => ({...e, startDate: new Date(e.startDate), endDate: new Date(e.endDate)}));
+
+        const fullListData = [
+            { category: "註冊前", id: "online-reg-non-exam", isScheduled: true, title: "網路報到(非分發入學)", responsibleUnit: "註冊組 / 分機:31390", details: "時間:8月1日(五)上午10時 至8月7日(四)午夜12時止。\n對象:特殊選才、繁星推薦、申請入學等非分發入學之新生。\n說明:上網核對基本資料、上傳學歷文件。此階段亦須完成兵役、健康資料登錄及各項問卷填寫。若需更改姓名，務必於8/7前將戶籍謄本寄達註冊組。" },
+            { category: "註冊前", id: "online-reg-exam", isScheduled: true, title: "網路報到(分發入學)", responsibleUnit: "註冊組 / 分機:31390", details: "時間:8月14日(四)上午10時至8月18日(一)午夜12時止。\n對象:分發入學之新生。\n說明:上網核對基本資料、上傳學歷文件。此階段亦須完成兵役、健康資料登錄及各項問卷填寫。若需更改姓名，務必於8/18前將戶籍謄本寄達註冊組。" },
+            { category: "註冊前", id: "dorm-application", isScheduled: true, title: "宿舍申請", responsibleUnit: "住宿組 / 分機:34706", details: "系統開放時間自8月15日16:00起至8月18日10:00止。\n凡未辦理網路登記住宿申請者視同放棄住宿。\n已錄取為厚德、載物、天下之新生,由書院直接安排宿舍床位，未錄取者可於上述系統開放時間申請宿舍。" },
+            { category: "註冊前", id: "credit-waiver", isScheduled: true, title: "學分抵免", responsibleUnit: "註冊組 / 分機:31390", details: "務必於8月22日(五)前辦理。\n對象:重考生、重新申請入學之新生、先修讀學分後考取修讀學位、以香港副學士(或高級文憑)資格入學者。\n至「校務資訊系統」→「抵免學分」申請。" },
+            { category: "註冊前", id: "fee-reduction", isScheduled: true, title: "辦理學雜費減免", responsibleUnit: "生輔組 / 分機:34649", details: "時間:8月13日(三)至8月19日(二)\n對象:符合身障、原住民、低收/中低收入戶、現役軍人子女、特殊境遇家庭等資格之學生。\n請至校務資訊系統/學雜費減免作業填寫列印申請表，並線上繳件。" },
+            { category: "註冊前", id: "civil-servant-benefit-online", isScheduled: true, title: "公教遺族就學優待(線上申請)", responsibleUnit: "生輔組 / 分機:34649", details: "時間:8月13日(三)至8月19日(二)\n欲申請者請先至生輔組網頁下載申請書，並至〈校務資訊系統/學雜費減免作業〉完成減免申請。" },
+            { category: "註冊前", id: "tuition-payment", isScheduled: true, title: "繳交學雜費", responsibleUnit: "出納組 / 分機:31364", details: "時間:8月21日(四)起至9月1日(一)\n學生應於本校行事曆規定之上課開始日(含)前繳交各項應繳費用。繳費完成後即完成註冊。\n辦理保留入學、休學及就學貸款同學，請勿繳費。" },
+            { category: "註冊前", id: "course-selection-1", isScheduled: true, title: "新生選課(第一階段)", responsibleUnit: "課務組 / 分機:31393-5", details: "時間:8月18日(一)~8月20日(三)每日中午12:00至次日上午09:00止。\n請至《校務資訊系統》進行選課。\n可於此階段加選【開箱清華園】微學分課程。" },
+            { category: "註冊前", id: "english-waiver", isScheduled: false, title: "申請英文免修或減修", responsibleUnit: "英語教育中心 / 分機:34423", details: "具有高中(含)以後所考之英文檢定考試且達本校英文免/減修標準時，得申請。\n請至校務資訊系統填寫申請表,並攜帶學生證、英檢成績單及其影本、申請單至英語教育中心辦公室(綜二206)檢核。" },
+            { category: "註冊前", id: "various-questionnaires", isScheduled: false, title: "填寫各項問卷", responsibleUnit: "各單位", details: "請進入《校務資訊系統/新生報到》填寫以下問卷:\n- 各項英語能力檢測調查表\n- 自我覺察評估問卷\n- 新生入學管道問卷\n- 性平問卷\n- UCAN 職涯評測\n- 背景資料" },
+            { category: "註冊前", id: "health-info", isScheduled: true, title: "填寫健康資料及健康檢查", responsibleUnit: "衛生保健組 / 分機:43000", details: "填寫健康資料:請至校務資訊系統/新生報到填寫。\n健康檢查:健檢日為8月27日,請依註冊程序單所訂時間至校友體育館健檢。費用810元現金。健檢前6小時禁食(可喝水)。\n未完成健檢導致無法完成註冊程序者，須自負相關之責。" },
+            { category: "註冊前", id: "military-service", isScheduled: false, title: "填寫兵役資料", responsibleUnit: "生輔組 / 分機:31022", details: "所有同學(不含外籍生、陸生及僑生(具僑民役男身分除外))均需至<校務資訊系統/新生報到>網頁填寫個人兵役相關資料。" },
+            { category: "註冊前", id: "bank-account", isScheduled: false, title: "登錄個人銀行帳戶", responsibleUnit: "出納組 / 分機:31364", details: "請至(校務資訊系統/新生報到)/「銀行帳號登錄」登錄學生個人銀行帳號(玉山銀行、兆豐銀行、郵局三擇一),俾利獎助學金、工讀金等匯入作業。" },
+            { category: "註冊前", id: "residential-college-apply-1", isScheduled: true, title: "申請清華書院", responsibleUnit: "清華書院 / 分機:62559", details: "第一階段招生:5月12日(一)中午12點至7月10日(四)中午12點截止。\n錄取報到:7月18日(五)中午12點至7月24日(四)23:59截止。\n未錄取者依宿舍申請規定至住宿組網站登記。" },
+            { category: "註冊前", id: "student-loan-bank", isScheduled: true, title: "就學貸款(銀行對保)", responsibleUnit: "生輔組 / 分機:34660", details: "臺銀於8月1日開始作業。\n請依規定先至臺灣銀行各分行辦理銀行對保手續。每一教育階段第一次申請時,需邀保證人並攜帶戶籍謄本、身分證、印章、入學通知單、註冊繳費單等文件辦理。" },
+            { category: "註冊日", id: "dorm-check-in", isScheduled: true, title: "宿舍入住報到", responsibleUnit: "住宿組 / 分機:34706", details: "時間:8月24日、25日(日、一)上午8:30至下午4:00止。\n地點:各新生齋舍報到(請參見住宿組網頁公告宿舍床位分配表)。" },
+            { category: "註冊日", id: "parents-symposium", isScheduled: true, title: "新生家長座談會", responsibleUnit: "生輔組 / 分機:34647", details: "時間:8月24日(週日)下午2時至4時\n地點:校本部旺宏館國際會議廳" },
+            { category: "註冊日", id: "orientation-camp", isScheduled: true, title: "新生領航營", responsibleUnit: "生輔組 / 分機:34647", details: "時間:8月26日(週二)至8月27日(週三)\n詳細資訊請參閱「新生資訊網」。\n本活動同步開設【微學分課程】-【開箱清華園】，可於新生選課階段加選。" },
+            { category: "註冊日", id: "health-check", isScheduled: true, title: "新生註冊程序單與健檢", responsibleUnit: "註冊組 / 衛生保健組", details: "健檢日期、地點:8月27日依註冊程序單所訂時間至校友體育館健檢。\n註冊程序單列印處:請於健檢日前至《校務資訊系統/新生報到》列印,當日務必攜帶。\n新生於新生健檢日完成健檢後請妥善保管您的註冊程序單至領取學生證為止。" },
+            { category: "註冊後", id: "student-loan-submit", isScheduled: true, title: "就學貸款(完成貸款手續)", responsibleUnit: "生輔組 / 分機:34660", details: "時間:8月29日(五)、9月1日(一)上午9:00~12:30及下午1:00~4:00\n攜帶就學貸款申請表、臺灣銀行撥款通知書第2聯等文件至水木生活中心二樓生輔組會議室繳件。" },
+            { category: "註冊後", id: "civil-servant-benefit-submit", isScheduled: true, title: "公教遺族就學優待(紙本繳件)", responsibleUnit: "生輔組 / 分機:34649", details: "於9月5日(五)前繳交紙本文件至生輔組辦公室。\n需繳交有效卹亡給與令、戶籍謄本、學生證影本等文件。" },
+            { category: "註冊後", id: "student-id-pickup", isScheduled: false, title: "學生證領取", responsibleUnit: "註冊組 / 分機:31390", details: "已完成新生註冊程序單手續者,註冊組將於9月1日開學日通知各新生班代至註冊組領取學生證後轉發。\n新生註冊請假者,9月2日起親持已完成健檢之註冊程序單至校本部行政大樓一樓註冊組領取學生證。" },
+            { category: "註冊後", id: "library-activation", isScheduled: false, title: "圖書館服務啟用", responsibleUnit: "圖書館 / 分機:42995", details: "領到學生證後,至圖書館網站進行讀者權益聲明簽署作業,以開啟您在本校圖書館各項使用權益以及享有台聯大聯盟圖書館一證通服務。" },
+            { category: "註冊後", id: "ccc-services", isScheduled: false, title: "計通中心服務申請", responsibleUnit: "計算機與通訊中心 / 分機:31000", details: "申請電子郵件信箱、學生宿網、校園無線網路等服務,申請流程請參閱本中心網址 https://ccc.site.nthu.edu.tw/之新生入學須知。" },
+            { category: "其他注意事項", id: "class-start", isScheduled: true, title: "正式上課日", responsibleUnit: "教務處", details: "9月1日(星期一)開始上課。" },
+            { category: "其他注意事項", id: "leave-application", isScheduled: false, title: "休學或保留入學資格", responsibleUnit: "註冊組", details: "保留入學資格:新生因重病、懷孕等特別事故,不能於當學年入學,得檢具有關證明於7月1日至8月29日止向教務處申請。\n休學:新生須完成新生網路報到及新生資料上傳後,方得辦理休學。於註冊日(含)前辦理休學者免繳學雜費。" },
+            { category: "其他注意事項", id: "double-major", isScheduled: false, title: "雙重學籍", responsibleUnit: "註冊組", details: "如有雙重學籍情事,依學則第37條應於雙重學籍事實發生的當學期上課開始日前,向所屬系、學位學程提出申請。" },
+        ];
+        const CATEGORY_STYLES = {
+            Registration: { name: '註冊', color: 'var(--cat-registration)' },
+            Academic: { name: '學業', color: 'var(--cat-academic)' },
+            Housing: { name: '住宿', color: 'var(--cat-housing)' },
+            Financial: { name: '財務', color: 'var(--cat-financial)' },
+            Activity: { name: '活動', color: 'var(--cat-activity)' },
+        };
+
+        // --- STATE (SHARED) ---
+        let calendarDate = new Date(); // Date for the calendar view
+        let completedTasks = new Set(JSON.parse(localStorage.getItem('completedTasksNTHU')) || []);
+        let currentView = 'calendar';
+
+        // --- DOM ELEMENTS (SHARED) ---
+        const calendarView = document.getElementById('calendar-view');
+        const listView = document.getElementById('list-view');
+        const btnCalendarView = document.getElementById('btn-calendar-view');
+        const btnListView = document.getElementById('btn-list-view');
+        
+        // --- SHARED FUNCTIONS ---
+        const handleCheckboxChange = (taskId) => {
+            if (completedTasks.has(taskId)) {
+                completedTasks.delete(taskId);
+            } else {
+                completedTasks.add(taskId);
+            }
+            localStorage.setItem('completedTasksNTHU', JSON.stringify([...completedTasks]));
+            updateView(); // Re-render the current view
+        };
+
+        // --- VIEW SWITCHING LOGIC (UNCHANGED) ---
+        const switchView = (view) => {
+            localStorage.setItem('View', view);
+            currentView = view;
+            updateView();
+        };
+
+        const updateView = () => {
+            if (currentView === 'calendar') {
+                btnCalendarView.classList.add('bg-[#53267F]', 'text-white');
+                btnCalendarView.classList.remove('bg-transparent', 'text-gray-600');
+                btnListView.classList.add('bg-transparent', 'text-gray-600');
+                btnListView.classList.remove('bg-[#53267F]', 'text-white');
+                calendarView.classList.remove('hidden');
+                listView.classList.add('hidden');
+                renderCalendarView();
+            } else {
+                btnListView.classList.add('bg-[#53267F]', 'text-white');
+                btnListView.classList.remove('bg-transparent', 'text-gray-600');
+                btnCalendarView.classList.add('bg-transparent', 'text-gray-600');
+                btnCalendarView.classList.remove('bg-[#53267F]', 'text-white');
+                listView.classList.remove('hidden');
+                calendarView.classList.add('hidden');
+                renderListView();
+            }
+        };
+
+        // --- CALENDAR VIEW LOGIC (NEW) ---
+        const renderCalendarView = () => {
+            renderOverview();
+            renderCalendar();
+            renderLegend();
+            addCalendarEventListeners();
+        };
+
+        const toUTCDate = (date) => new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const formatDate = (date) => date.toISOString().substring(0, 10);
+        const formatDisplayDate = (date) => `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+        const formatTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+
+        const renderOverview = () => {
+            const displayDate = new Date();
+            document.getElementById('overview-title').textContent = `今天 (${formatDisplayDate(displayDate)}) 的待辦事項`;
+            const todaysEvents = eventsData.filter(event => {
+                const start = new Date(event.startDate.toDateString());
+                const end = new Date(event.endDate.toDateString());
+                end.setHours(23, 59, 59, 999);
+                return displayDate >= start && displayDate <= end;
+            });
+            const overviewList = document.getElementById('overview-list');
+            if (todaysEvents.length === 0) {
+                overviewList.innerHTML = '<li>今天沒有待辦事項，請查看月曆以規劃未來行程。</li>';
+                return;
+            }
+            overviewList.innerHTML = todaysEvents.map(event => `
+                <li class="overview-item ${completedTasks.has(event.id) ? 'done' : ''}" data-id="${event.id}">
+                    <input type="checkbox" data-id="${event.id}" ${completedTasks.has(event.id) ? 'checked' : ''}>
+                    <span class="item-title">${event.title}</span>
+                    <span class="category-tag" style="background-color: ${CATEGORY_STYLES[event.category]?.color || '#6c757d'}">
+                        ${CATEGORY_STYLES[event.category]?.name || event.category}
+                    </span>
+                </li>
+            `).join('');
+        };
+        
+        const renderCalendar = () => {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            document.getElementById('current-month-year').textContent = `${year}年 ${month + 1}月`;
+            const calendarGrid = document.getElementById('calendar-grid');
+            calendarGrid.innerHTML = '';
+            ['日', '一', '二', '三', '四', '五', '六'].forEach(day => {
+                calendarGrid.innerHTML += `<div class="calendar-header">${day}</div>`;
+            });
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            const firstDateInView = toUTCDate(new Date(firstDayOfMonth.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay())));
+            firstDayOfMonth.setDate(1);
+            const lastDateInView = toUTCDate(new Date(lastDayOfMonth.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay()))));
+            lastDayOfMonth.setDate(lastDayOfMonth.getDate() - (6 - lastDayOfMonth.getDay()));
+            let tempDate = new Date(firstDateInView);
+            while(tempDate <= lastDateInView) {
+                const isToday = formatDate(tempDate) === formatDate(toUTCDate(new Date()));
+                const isOtherMonth = tempDate.getUTCMonth() !== month;
+                calendarGrid.innerHTML += `
+                    <div class="calendar-day ${isToday ? 'today' : ''} ${isOtherMonth ? 'other-month' : ''}" data-date="${formatDate(tempDate)}">
+                        <div class="day-number">${tempDate.getUTCDate()}</div>
+                        <div class="dots-container"></div>
+                    </div>
+                `;
+                tempDate.setUTCDate(tempDate.getUTCDate() + 1);
+            }
+            renderEventsInCalendar(year, month, firstDateInView);
+        };
+
+        const renderEventsInCalendar = (year, month, firstDateInView) => {
+            const eventLayer = document.getElementById('event-layer');
+            const calendarGrid = document.getElementById('calendar-grid');
+            if (!eventLayer || !calendarGrid) return;
+            eventLayer.innerHTML = '';
+
+            if (window.innerWidth <= 480) {
+                renderDotsForMobile(year, month);
+                return;
+            }
+
+            const monthStart = toUTCDate(new Date(year, month, 1));
+            const monthEnd = toUTCDate(new Date(year, month + 1, 0));
+            const visibleEvents = eventsData.filter(event => toUTCDate(event.startDate) <= monthEnd && toUTCDate(event.endDate) >= monthStart).sort((a, b) => (b.endDate - b.startDate) - (a.endDate - a.startDate));
+            const layout = {};
+            const eventLayoutInfo = [];
+
+            visibleEvents.forEach(event => {
+                let chunkStartDate = new Date(event.startDate);
+                while(chunkStartDate <= event.endDate) {
+                    if (chunkStartDate.getMonth() > month && chunkStartDate.getFullYear() >= year) break;
+                    if (chunkStartDate.getDay() === 0 || chunkStartDate.getTime() === event.startDate.getTime()) {
+                        let chunkEndDate = new Date(chunkStartDate);
+                        
+                        // FIX: The condition now uses toUTCDate to compare dates without time,
+                        // preventing the loop from running one extra time.
+                        while(chunkEndDate.getDay() < 6 && toUTCDate(chunkEndDate) < toUTCDate(event.endDate)) {
+                            chunkEndDate.setDate(chunkEndDate.getDate() + 1);
+                        }
+
+                        if (chunkEndDate.getMonth() === month || chunkStartDate.getMonth() === month) {
+                            let slot = 0;
+                            let slotFound = false;
+                            while(!slotFound) {
+                                let isSlotAvailable = true;
+                                let dateIterator = new Date(chunkStartDate);
+                                while(dateIterator <= chunkEndDate) {
+                                    const dateKey = formatDate(toUTCDate(dateIterator));
+                                    if(layout[dateKey] && layout[dateKey][slot]) {
+                                        isSlotAvailable = false;
+                                        break;
+                                    }
+                                    dateIterator.setDate(dateIterator.getDate() + 1);
+                                }
+                                if(isSlotAvailable) slotFound = true; else slot++;
+                            }
+                            let dateMarker = new Date(chunkStartDate);
+                            while(dateMarker <= chunkEndDate) {
+                                const dateKey = formatDate(toUTCDate(dateMarker));
+                                if(!layout[dateKey]) layout[dateKey] = [];
+                                layout[dateKey][slot] = event.id;
+                                dateMarker.setDate(dateMarker.getDate() + 1);
+                            }
+                            eventLayoutInfo.push({ event, slot, chunkStartDate, chunkEndDate });
+                        }
+                        chunkStartDate = new Date(chunkEndDate);
+                    }
+                    chunkStartDate.setDate(chunkStartDate.getDate() + 1);
+                }
+            });
+
+            const headerHeight = document.querySelector('.calendar-header').offsetHeight;
+            const eventBarHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--event-bar-height'));
+            const eventBarMargin = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--event-bar-v-margin'));
+            const totalEventHeight = eventBarHeight + eventBarMargin;
+            const weekMaxSlots = [0,0,0,0,0,0];
+            for(const dateKey in layout) {
+                const date = toUTCDate(new Date(dateKey));
+                const dayIndex = Math.round((date.getTime() - firstDateInView.getTime()) / (1000 * 3600 * 24));
+                const weekIndex = Math.floor(dayIndex / 7);
+                if(layout[dateKey] && layout[dateKey].length > weekMaxSlots[weekIndex]) {
+                    weekMaxSlots[weekIndex] = layout[dateKey].length;
+                }
+            }
+            const gridRowHeights = weekMaxSlots.map(maxSlots => 30 + (maxSlots * totalEventHeight) + 5);
+            calendarGrid.style.gridTemplateRows = `auto ${gridRowHeights.map(h => `${h}px`).join(' ')}`;
+
+            eventLayoutInfo.forEach(({ event, slot, chunkStartDate, chunkEndDate }) => {
+                const startDayOfWeek = chunkStartDate.getDay();
+                const dayIndex = Math.round((toUTCDate(chunkStartDate).getTime() - firstDateInView.getTime()) / (1000 * 3600 * 24));
+                const weekIndex = Math.floor(dayIndex / 7);
+                const eventBar = document.createElement('div');
+                eventBar.className = `event-bar ${completedTasks.has(event.id) ? 'done' : ''}`;
+                eventBar.dataset.id = event.id;
+                eventBar.textContent = event.title;
+                eventBar.style.backgroundColor = CATEGORY_STYLES[event.category]?.color || '#6c757d';
+                let top = headerHeight + (weekIndex * 1);
+                for(let i=0; i<weekIndex; i++) top += gridRowHeights[i];
+                top += (slot * totalEventHeight) + 30;
+                eventBar.style.top = `${top}px`;
+                const duration = (toUTCDate(chunkEndDate).getTime() - toUTCDate(chunkStartDate).getTime()) / (1000 * 3600 * 24) + 1;
+                eventBar.style.left = `calc(${(100 / 7) * startDayOfWeek}% + 2px)`;
+                eventBar.style.width = `calc(${(100 / 7) * duration}% - 4px)`;
+                if (formatDate(toUTCDate(event.startDate)) === formatDate(toUTCDate(chunkStartDate)) || chunkStartDate.getDay() === 0) eventBar.classList.add('start-cap');
+                if (formatDate(toUTCDate(event.endDate)) === formatDate(toUTCDate(chunkEndDate)) || chunkEndDate.getDay() === 6) eventBar.classList.add('end-cap');
+                eventLayer.appendChild(eventBar);
+            });
+        };
+
+        const renderDotsForMobile = (year, month) => {
+            const visibleEvents = eventsData.filter(event => {
+                const eventEnd = new Date(event.endDate);
+                eventEnd.setHours(23, 59, 59, 999);
+                return event.startDate <= new Date(year, month + 1, 0) && eventEnd >= new Date(year, month, 1);
+            });
+            visibleEvents.forEach(event => {
+                let iterDate = new Date(event.startDate);
+                while (iterDate <= event.endDate) {
+                    if (iterDate.getMonth() === month) {
+                        const dayCell = document.querySelector(`.calendar-day[data-date="${formatDate(toUTCDate(iterDate))}"]`);
+                        if (dayCell && !dayCell.querySelector(`.dots-container [data-id="${event.id}"]`)) {
+                            const dotContainer = dayCell.querySelector('.dots-container');
+                            const eventDot = document.createElement('div');
+                            eventDot.className = 'event-dot';
+                            eventDot.style.backgroundColor = CATEGORY_STYLES[event.category]?.color || '#6c757d';
+                            eventDot.dataset.id = event.id;
+                            dotContainer.appendChild(eventDot);
+                        }
+                    }
+                    iterDate.setDate(iterDate.getDate() + 1);
+                }
+            });
+        };
+
+        const renderLegend = () => {
+            const legendContainer = document.getElementById('calendar-legend');
+            legendContainer.innerHTML = Object.values(CATEGORY_STYLES).map(style => `
+                <div class="legend-item">
+                    <div class="legend-color-box" style="background-color: ${style.color};"></div>
+                    <span>${style.name}</span>
+                </div>
+            `).join('');
+        };
+
+        const showModal = (eventId) => {
+            const event = eventsData.find(e => e.id === eventId);
+            if (!event) return;
+            const detailsHtml = event.details.replace(/\[(.*?)\]\((.*?)\)/g, '<a style="color:blue;" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+            document.getElementById('modal-title').textContent = event.title;
+            document.getElementById('modal-body').innerHTML = `
+                <p><strong>辦理期間:</strong> ${formatDisplayDate(event.startDate)} ${formatTime(event.startDate)} - ${formatDisplayDate(event.endDate)} ${formatTime(event.endDate)}</p>
+                <p><strong>適用對象:</strong> ${event.targetAudience}</p>
+                <p><strong>重要說明:</strong> ${detailsHtml}</p>
+                <p><strong>負責單位:</strong> ${event.responsibleUnit}</p>
+            `;
+            document.getElementById('event-modal').classList.add('visible');
+        };
+
+        const closeModal = () => document.getElementById('event-modal').classList.remove('visible');
+        
+        const addCalendarEventListeners = () => {
+            const calendarViewNode = document.getElementById('calendar-view');
+            if (calendarViewNode.dataset.listenersAttached) return;
+
+            document.getElementById('prev-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
+                renderCalendar();
+            });
+            document.getElementById('next-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
+                renderCalendar();
+            });
+            document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+            document.getElementById('event-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) closeModal();
+            });
+            calendarViewNode.addEventListener('click', (e) => {
+                const eventTarget = e.target.closest('.event-bar, .event-dot, .overview-item');
+                if (eventTarget) {
+                    if (e.target.matches('input[type="checkbox"]')) return;
+                    showModal(eventTarget.dataset.id);
+                }
+            });
+            calendarViewNode.addEventListener('change', (e) => {
+                if (e.target.matches('input[type="checkbox"]')) {
+                    handleCheckboxChange(e.target.dataset.id);
+                }
+            });
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if(currentView === 'calendar') renderCalendar();
+                }, 250);
+            });
+            calendarViewNode.dataset.listenersAttached = 'true';
+        };
+
+        // --- LIST VIEW LOGIC (UNCHANGED) ---
+        const renderListView = () => {
+            const listContainer = document.getElementById('list-container');
+            const searchBox = document.getElementById('search-box');
+            listContainer.innerHTML = '';
+            const searchTerm = searchBox.value.toLowerCase();
+            const groupedData = fullListData.reduce((acc, item) => {
+                const category = item.category;
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(item);
+                return acc;
+            }, {});
+            for (const category in groupedData) {
+                const categoryContainer = document.createElement('div');
+                categoryContainer.innerHTML = `<h2 class="text-2xl font-bold text-[#53267F] border-b-2 border-[#a38db8] pb-2 mb-4">${category}</h2>`;
+                const itemsList = document.createElement('div');
+                itemsList.className = 'space-y-4';
+                let hasVisibleItems = false;
+                groupedData[category].forEach(item => {
+                    const itemText = (item.title + item.details + item.responsibleUnit).toLowerCase();
+                    if (itemText.includes(searchTerm)) {
+                        const taskCard = createTaskCard(item);
+                        itemsList.appendChild(taskCard);
+                        hasVisibleItems = true;
+                    }
+                });
+                if (hasVisibleItems) {
+                    categoryContainer.appendChild(itemsList);
+                    listContainer.appendChild(categoryContainer);
+                }
+            }
+        };
+
+        const createTaskCard = (item) => {
+            const isCompleted = completedTasks.has(item.id);
+            const card = document.createElement('div');
+            card.className = `task-item bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition-opacity ${isCompleted ? 'completed' : ''}`;
+            const header = document.createElement('div');
+            header.className = 'task-header flex flex-col sm:flex-row sm:items-center sm:justify-between';
+            const leftSection = document.createElement('div');
+            leftSection.className = 'flex-grow mb-2 sm:mb-0';
+            const checkboxLabel = document.createElement('label');
+            checkboxLabel.className = 'flex items-center space-x-3 cursor-pointer';
+            checkboxLabel.innerHTML = `
+                <input type="checkbox" ${isCompleted ? 'checked' : ''} class="h-5 w-5 rounded border-gray-300 text-[#53267F] focus:ring-[#a38db8] flex-shrink-0">
+                <span class="task-title text-lg font-semibold text-gray-800">${item.title}</span>`;
+            checkboxLabel.querySelector('input').addEventListener('change', () => handleCheckboxChange(item.id));
+            leftSection.appendChild(checkboxLabel);
+            const unit = document.createElement('p');
+            unit.className = 'text-sm text-gray-500 ml-8';
+            unit.textContent = item.responsibleUnit;
+            leftSection.appendChild(unit);
+            const rightSection = document.createElement('div');
+            rightSection.className = 'flex-shrink-0 self-start sm:self-center';
+            const toggleButton = document.createElement('button');
+            toggleButton.className = 'toggle-details text-sm font-medium text-[#53267F] hover:underline flex items-center';
+            toggleButton.innerHTML = `<span class="btn-text">[+] 查看說明</span>`;
+            rightSection.appendChild(toggleButton);
+            header.appendChild(leftSection);
+            header.appendChild(rightSection);
+            const details = document.createElement('div');
+            details.className = 'task-details mt-2 pl-8';
+            details.innerHTML = `<div class="bg-gray-50 p-4 rounded-md border text-gray-600 whitespace-pre-wrap">${item.details}</div>`;
+            toggleButton.addEventListener('click', () => {
+                details.classList.toggle('open');
+                const btnText = toggleButton.querySelector('.btn-text');
+                btnText.textContent = details.classList.contains('open') ? '[-] 收合說明' : '[+] 查看說明';
+            });
+            card.appendChild(header);
+            card.appendChild(details);
+            return card;
+        };
+        
+        // --- APP INITIALIZATION ---
+        const init = () => {
+            // Setup listeners for non-view-specific elements
+            btnCalendarView.addEventListener('click', () => switchView('calendar'))
+            btnListView.addEventListener('click', () => switchView('list'));
+            document.getElementById('search-box').addEventListener('input', renderListView);
+            // Initial view render
+            updateView();
+        };
+        
+        init();
+        switchView(localStorage.getItem('View'));
+        setTimeout(() => {
+            renderOverview();
+            renderCalendar();
+        }, 10);
+    });
+    </script>
+</body>
+</html>
