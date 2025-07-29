@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國立清華大學114學年度新生註冊時程</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- New Styles from index.html --- */
+        :root {
+            --color-primary: #53267F;
+            --color-text: #333;
+            --color-background: #f8f9fa;
+            --color-light-gray: #e9ecef;
+            --color-white: #fff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+            --border-radius: 4px;
+            --event-bar-height: 22px;
+            --event-bar-v-margin: 2px;
+
+            --cat-registration: #007bff;
+            --cat-academic: #28a745;
+            --cat-housing: #fd7e14;
+            --cat-financial: #dc3545;
+            --cat-reduction: #fd46c9;
+            --cat-activity: #17a2b8;
+        }
+        header {
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-light-gray);
+            margin-bottom: 1.2rem;
+        }
+        body {
+            font-family: 'Noto Sans TC', 'system-ui', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Layout for the new calendar view */
+        #calendar-view-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1200px;
+        }
+
+        @media (min-width: 992px) {
+            #calendar-view-content {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        .overview-section, .calendar-section {
+            background: var(--color-white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .calendar-section {
+            position: relative;
+        }
+
+        .overview-section h2, .calendar-section h2 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            color: var(--color-primary);
+        }
+
+        /* Overview Section */
+        .overview-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .overview-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        .overview-item.done {
+            opacity: 0.5;
+        }
+        
+        .overview-item.done .item-title {
+            text-decoration: line-through;
+        }
+
+        .overview-item input[type="checkbox"] {
+            margin-right: 0.75rem;
+            min-width: 16px;
+            height: 16px;
+        }
+
+        .item-title {
+            flex-grow: 1;
+            font-size: 0.95rem;
+        }
+
+        .category-tag {
+            padding: 0.2em 0.6em;
+            border-radius: var(--border-radius);
+            color: var(--color-white);
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+
+        /* Calendar Section */
+        .calendar-container {
+            position: relative;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-controls button {
+            background: none;
+            border: 1px solid var(--color-light-gray);
+            border-radius: var(--border-radius);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .calendar-controls button:hover {
+            background-color: var(--color-light-gray);
+        }
+
+        #current-month-year {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 1px;
+            position: relative;
+            background-color: var(--color-light-gray);
+            border: 1px solid var(--color-light-gray);
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: bold;
+            color: var(--color-primary);
+            padding: 0.5rem 0;
+            background-color: var(--color-white);
+        }
+
+        .calendar-day {
+            background-color: #fff;
+            position: relative;
+            padding: 4px;
+            padding-top: 30px;
+            min-height: 120px;
+            box-sizing: border-box;
+        }
+        
+        .calendar-day.other-month {
+            background-color: #fdfdff;
+        }
+
+        .calendar-day.other-month .day-number {
+            opacity: 0.4;
+        }
+
+        .day-number {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.85rem;
+            z-index: 2;
+        }
+        
+        .calendar-day.today .day-number {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        #event-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .event-bar {
+            font-size: 0.75rem;
+            padding: 0 8px;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            position: absolute;
+            height: var(--event-bar-height);
+            line-height: var(--event-bar-height);
+            box-sizing: border-box;
+            pointer-events: auto;
+            transition: opacity 0.3s ease;
+        }
+
+        .event-bar.start-cap {
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        .event-bar.end-cap {
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+        }
+        
+        .event-bar:hover {
+            opacity: 0.8;
+            z-index: 3;
+        }
+        
+        .event-bar.done {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .calendar-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-light-gray);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+        }
+
+        .legend-color-box {
+            width: 16px;
+            height: 16px;
+            border-radius: var(--border-radius);
+            margin-right: 0.5rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            width: 90%;
+            max-width: 600px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--color-light-gray);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--color-primary);
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        
+        .modal-body p {
+            margin: 0 0 1rem 0;
+        }
+        
+        .modal-body strong {
+            color: var(--color-primary);
+            margin-right: 0.5rem;
+        }
+
+        .modal-body a {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .modal-body a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .event-bar { font-size: 0.7rem; height: 20px; line-height: 20px; }
+            .calendar-header { font-size: 0.8rem; }
+            .modal-content { padding: 1.5rem; }
+            .modal-header h3 { font-size: 1.3rem; }
+        }
+        
+        @media (max-width: 480px) {
+            #calendar-view-content { grid-template-columns: 1fr; }
+            .calendar-grid { gap: 1px; }
+            .calendar-day { min-height: 80px; padding-top: 25px; }
+            .day-number { font-size: 0.75rem; }
+            .event-bar { display: none; } /* Hide event text on very small screens */
+            .dots-container { 
+                position: absolute;
+                bottom: 4px;
+                left: 0;
+                right: 0;
+                text-align: center;
+            }
+            .event-dot { /* Show a dot instead */
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                margin: 0 1px;
+            }
+        }
+
+        /* --- Styles for Full List View (Untouched) --- */
+        .completed {
+            opacity: 0.5;
+        }
+        .completed .task-title {
+            text-decoration: line-through;
+        }
+        .task-details {
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            max-height: 0;
+            overflow: hidden;
+        }
+        .task-details.open {
+            max-height: 1000px;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="main-container container mx-auto p-4 md:p-8">
+        <header>
+            <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-primary)]">國立陽明交通大學114學年度新生註冊時程<br><a href="https://aa.nycu.edu.tw/aa/ch/app/news/view?module=headnews&id=2462&serno=c8f33033-20dd-4e00-b272-af643d8ad355" target="_blank" style="text-decoration: underline; color: #007bff; font-size: large;">（詳情請見交大註冊組）</a> <a href="https://aa.nycu.edu.tw/aa/ch/app/news/doc?module=headnews&detailNo=1397036209586311168&type=s" target="_blank" style="text-decoration: underline; color: #007bff; font-size: large;">（資料來源PDF檔）</a></h1>
+            <p class="text-gray-500 mt-2">※請使用電腦進行瀏覽，如使用手機請將手機轉成橫的※ </p>
+            <p class="text-gray-500 mt-2">※免責聲明：實際日程請以清大官方公告為準，本網站資料皆為作者自行整理，不負任何相關責任※ </p>
+ 
+        </header>
+
+        <!-- View Switcher (Untouched) -->
+        <div class="flex justify-center mb-8 bg-gray-200 rounded-lg p-1 max-w-sm mx-auto">
+            <button id="btn-calendar-view" class="w-1/2 p-2 rounded-md text-sm font-medium focus:outline-none transition-colors duration-300">日曆模式</button>
+            <button id="btn-list-view" class="w-1/2 p-2 rounded-md text-sm font-medium focus:outline-none transition-colors duration-300">完整列表模式</button>
+        </div>
+
+        <!-- Calendar View (Replaced) -->
+        <div id="calendar-view">
+            <div id="calendar-view-content">
+                <aside class="overview-section">
+                    <h2 id="overview-title" class="text-2xl md:text-3xl font-bold text-[var(--color-primary)]"></h2><br>
+                    <ul class="overview-list" id="overview-list"></ul>
+                </aside>
+                <section class="calendar-section">
+                    <div class="calendar-controls">
+                        <button id="prev-month-btn">‹</button>
+                        <h2 id="current-month-year"></h2>
+                        <button id="next-month-btn">›</button>
+                    </div>
+                    <div class="calendar-container">
+                        <div class="calendar-grid" id="calendar-grid"></div>
+                        <div id="event-layer"></div>
+                    </div>
+                    <div class="calendar-legend" id="calendar-legend"></div>
+                </section>
+            </div>
+            <div class="modal-overlay" id="event-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modal-title"></h3>
+                        <button class="modal-close-btn" id="modal-close-btn">&times;</button>
+                    </div>
+                    <div class="modal-body" id="modal-body"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full List View (Untouched) -->
+        <div id="list-view" class="hidden" style="max-width: 1200px; margin-left: auto; margin-right: auto;">
+             <div class="mb-6">
+                <input type="search" id="search-box" placeholder="搜尋待辦事項 (例如：宿舍、免修)..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#a38db8] focus:border-[#53267F] transition">
+            </div>
+            <div id="list-container" class="space-y-8">
+                <!-- Task categories and items will be injected here by original JS -->
+            </div>
+        </div>
+        <footer style="font-size: small; margin-top: 10px; margin-bottom: -20px;">© 2025 國立清華陽明交通大學114學年度新生註冊時程一覽表. Made by KUAN HSUN & Gemini</footer>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- DATA (SHARED) ---
+        const eventsData = [
+    {
+        "id": "student-data-login",
+        "title": "新生資料登錄",
+        "startDate": "2025-06-15T00:00:00",
+        "endDate": "2025-08-20T23:59:59",
+        "category": "Registration",
+        "targetAudience": "全體新生",
+        "details": "請至校園單一入口網站登錄個人資料、上傳學生證照片及學歷證件。此為註冊的必要程序。",
+        "responsibleUnit": "註冊一組 / 分機:62203, 註冊二組 / 分機:31666"
+    },
+    {
+        "id": "dorm-application-ym",
+        "title": "宿舍申請(陽明校區)",
+        "startDate": "2025-08-04T00:00:00",
+        "endDate": "2025-08-20T12:00:00",
+        "category": "Housing",
+        "targetAudience": "陽明校區大一新生",
+        "details": "大一新生保障住宿，但仍須於期間內至單一入口網/宿舍申請(陽明校區)登錄。",
+        "responsibleUnit": "住宿服務一組 / 分機:62307"
+    },
+    {
+        "id": "dorm-application-ct",
+        "title": "宿舍申請(交大校區)",
+        "startDate": "2025-08-04T00:00:00",
+        "endDate": "2025-08-14T12:00:00",
+        "category": "Housing",
+        "targetAudience": "交大校區大一新生",
+        "details": "務必至住宿服務組網頁勾選是否住宿，不因申請先後影響宿舍分配。",
+        "responsibleUnit": "住宿服務二組 / 分機:31495, 31497"
+    },
+    {
+        "id": "ust-transfer-student-reg",
+        "title": "台聯大系統暨轉校新生報到",
+        "startDate": "2025-08-11T00:00:00",
+        "endDate": "2025-09-01T23:59:59",
+        "category": "Registration",
+        "targetAudience": "台聯大系統新生、轉校生",
+        "details": "請先完成線上新生資料維護，並於開學前至註冊組辦公室繳驗學歷證件正本。",
+        "responsibleUnit": "註冊一組 / 分機:62203, 註冊二組 / 分機:31666"
+    },
+    {
+        "id": "dorm-check-in",
+        "title": "宿舍入住",
+        "startDate": "2025-08-23T09:00:00",
+        "endDate": "2025-08-24T19:00:00",
+        "category": "Housing",
+        "targetAudience": "全體住宿新生",
+        "details": "陽明校區新生宿舍入住時間。",
+        "responsibleUnit": "住宿服務一組 / 分機:62307"
+    },
+    {
+        "id": "health-check-ym",
+        "title": "新生體檢(陽明校區)",
+        "startDate": "2025-08-25T00:00:00",
+        "endDate": "2025-08-25T23:59:59",
+        "category": "Registration",
+        "targetAudience": "陽明校區新生",
+        "details": "於陽明校區活動中心一樓門廳辦理。",
+        "responsibleUnit": "衛保組 / 分機:67212"
+    },
+    {
+        "id": "department-orientation",
+        "title": "新生入學輔導",
+        "startDate": "2025-08-25T00:00:00",
+        "endDate": "2025-08-29T23:59:59",
+        "category": "Activity",
+        "targetAudience": "全體新生",
+        "details": "此期間由各系所自行辦理新生入學輔導活動。",
+        "responsibleUnit": "各學系辦公室"
+    },
+    {
+        "id": "tuition-payment-freshmen",
+        "title": "繳納學雜費(新生)",
+        "startDate": "2025-08-25T00:00:00",
+        "endDate": "2025-09-03T23:59:59",
+        "category": "Financial",
+        "targetAudience": "學士班新生",
+        "details": "請自行至學校「單一入口網頁」點選「學雜費系統」，即可下載列印繳費單。",
+        "responsibleUnit": "出納一組 / 分機:62080, 出納二組 / 分機:51808"
+    },
+    {
+        "id": "course-selection-1",
+        "title": "新生選課",
+        "startDate": "2025-08-25T12:00:00",
+        "endDate": "2025-08-28T10:00:00",
+        "category": "Academic",
+        "targetAudience": "全體新生",
+        "details": "網路選課系統於此期間全天開放。有人數上限的課程將於8/28上午10點後由系統隨機分發。",
+        "responsibleUnit": "課務一組 / 分機:62038, 62039, 課務二組 / 分機:50421~50425"
+    },
+    {
+        "id": "health-check-ct-domestic",
+        "title": "新生體檢(交大校區-本國籍生)",
+        "startDate": "2025-08-26T08:00:00",
+        "endDate": "2025-08-26T16:30:00",
+        "category": "Registration",
+        "targetAudience": "交大校區本國籍新生",
+        "details": "於交大校區大禮堂辦理。",
+        "responsibleUnit": "衛保組 / 分機:51104"
+    },
+    {
+        "id": "convocation",
+        "title": "新生開學典禮",
+        "startDate": "2025-08-27T00:00:00",
+        "endDate": "2025-08-27T23:59:59",
+        "category": "Activity",
+        "targetAudience": "全體新生",
+        "details": "地點擬於114年7月底公告。",
+        "responsibleUnit": "生活輔導一組 / 分機:62212, 生活輔導二組 / 分機:50859"
+    },
+    {
+        "id": "reserve-admission",
+        "title": "申請保留入學資格",
+        "startDate": "2025-06-15T00:00:00",
+        "endDate": "2025-08-29T23:59:59",
+        "category": "Academic",
+        "targetAudience": "因重病、兵役等特殊事故無法當學年入學之新生",
+        "details": "需檢具相關證明文件，聯繫系所後辦理。",
+        "responsibleUnit": "各學系辦公室, 註冊一組/二組"
+    },
+    {
+        "id": "dual-degree-application",
+        "title": "申請雙重學籍",
+        "startDate": "2025-06-15T00:00:00",
+        "endDate": "2025-08-29T23:59:59",
+        "category": "Academic",
+        "targetAudience": "欲申請雙重學籍之學生",
+        "details": "學生得具雙重學籍，但須向系所主管或指導教授報備，並將報備單送註冊組登錄。",
+        "responsibleUnit": "各學系辦公室"
+    },
+    {
+        "id": "leave-of-absence",
+        "title": "辦理休學(可免繳費)",
+        "startDate": "2025-06-15T00:00:00",
+        "endDate": "2025-09-01T23:59:59",
+        "category": "Academic",
+        "targetAudience": "欲辦理休學之新生",
+        "details": "於開學日(含)前完成休學程序者免繳學雜費。需先完成新生資料維護。",
+        "responsibleUnit": "各學系辦公室, 註冊一組/二組"
+    },
+    {
+        "id": "military-service-registration",
+        "title": "辦理兵役緩徵/儘召",
+        "startDate": "2025-06-15T00:00:00",
+        "endDate": "2025-09-01T23:59:59",
+        "category": "Registration",
+        "targetAudience": "全體役男新生",
+        "details": "男同學務必於新生資料維護頁面完成服役狀況登記，以免在學期間收到徵集令。",
+        "responsibleUnit": "軍訓室 / 陽明分機:62258, 交大分機:50704"
+    },
+    {
+        "id": "mental-health-survey",
+        "title": "填寫心理健康調查表",
+        "startDate": "2025-06-15T00:00:00",
+        "endDate": "2025-09-01T23:59:59",
+        "category": "Registration",
+        "targetAudience": "全體新生",
+        "details": "此調查目的為了解新生的身心狀態，以提供必要的協助與關懷。",
+        "responsibleUnit": "健康心理中心"
+    },
+    {
+        "id": "class-start",
+        "title": "正式上課日",
+        "startDate": "2025-09-01T08:00:00",
+        "endDate": "2025-09-01T23:59:59",
+        "category": "Academic",
+        "targetAudience": "全體學生",
+        "details": "114學年度第1學期正式上課日。",
+        "responsibleUnit": "教務處"
+    },
+    {
+        "id": "student-loan-ct",
+        "title": "就學貸款資料繳交(交大校區)",
+        "startDate": "2025-09-01T00:00:00",
+        "endDate": "2025-09-03T23:59:59",
+        "category": "Financial",
+        "targetAudience": "交大校區欲申請就學貸款之學生",
+        "details": "先至臺灣銀行完成對保，再至校內系統登錄並於期限內繳交文件至生輔二組。",
+        "responsibleUnit": "生活輔導二組 / 分機:50856"
+    },
+    {
+        "id": "student-loan-ym",
+        "title": "就學貸款資料繳交(陽明校區)",
+        "startDate": "2025-09-01T00:00:00",
+        "endDate": "2025-09-05T23:59:59",
+        "category": "Financial",
+        "targetAudience": "陽明校區欲申請就學貸款之學生",
+        "details": "先至臺北富邦銀行完成對保，再至校內系統登錄並於期限內繳交或郵寄文件至生輔一組。",
+        "responsibleUnit": "生活輔導一組 / 分機:62023"
+    },
+    {
+        "id": "course-add-drop",
+        "title": "開學後加退選",
+        "startDate": "2025-09-01T12:00:00",
+        "endDate": "2025-09-12T10:00:00",
+        "category": "Academic",
+        "targetAudience": "全體學生",
+        "details": "選課時間為每日中午12點至次日上午10點。最後選課截止時間為9/12(五)上午10:00。",
+        "responsibleUnit": "課務一組, 課務二組"
+    },
+    {
+        "id": "credit-waiver",
+        "title": "辦理學分抵免",
+        "startDate": "2025-09-01T00:00:00",
+        "endDate": "2025-09-12T23:59:59",
+        "category": "Academic",
+        "targetAudience": "符合資格之學生 (如轉學生)",
+        "details": "請於開學後第二週(9/12)結束前，備妥成績單等文件至各單位審核辦理。",
+        "responsibleUnit": "註冊一組 / 分機:62203, 註冊二組 / 分機:31666"
+    },
+    {
+        "id": "health-check-external-deadline",
+        "title": "自行校外體檢繳交期限",
+        "startDate": "2025-08-25T00:00:00",
+        "endDate": "2025-09-15T23:59:59",
+        "category": "Registration",
+        "targetAudience": "欲自行於校外體檢之新生",
+        "details": "若無法參加校內體檢，可自行至衛福部核可之醫療院所檢查，並於期限前將報告及學生健康資料卡繳回衛保組。",
+        "responsibleUnit": "衛保組"
+    }
+].map(e => ({...e, startDate: new Date(e.startDate), endDate: new Date(e.endDate)}));
+
+        const fullListData = [
+    {
+        "category": "註冊前",
+        "id": "portal-activation",
+        "isScheduled": false,
+        "title": "啟用校園單一入口與Email",
+        "responsibleUnit": "資訊技術服務中心 / 陽明分機:123, 交大分機:31888",
+        "details": "說明:此為登入校內各系統(新生資料、選課、學雜費等)的必要帳號，請務必先行啟用。\n1. 確認身分：本國生用身分證號。\n2. 申請NYCU Email帳號(@nycu.edu.tw)，此為Google Workspace帳號。\n3. 設定備援手機與信箱，以便忘記密碼時重設。帳號一經申請不得更改。"
+    },
+    {
+        "category": "註冊前",
+        "id": "student-data-login",
+        "isScheduled": true,
+        "title": "新生資料登錄",
+        "responsibleUnit": "註冊一組 / 分機:62203, 註冊二組 / 分機:31666",
+        "details": "時間:114年6月中旬 至 8月20日止。\n說明:請登入【單一入口】後，確認個人基本資料、填寫相關資料並上傳學生證照片及學歷證件電子檔。"
+    },
+    {
+        "category": "註冊前",
+        "id": "dorm-application-ym",
+        "isScheduled": true,
+        "title": "宿舍申請(陽明校區)",
+        "responsibleUnit": "住宿服務一組 / 分機:62307",
+        "details": "時間:8月4日 至 8月20日中午12點。\n說明:大一新生為保障住宿，但仍須於期間內登入單一入口網/陽明交通大學/宿舍申請(陽明校區)登錄。新生宿舍為男三舍、女一舍。"
+    },
+    {
+        "category": "註冊前",
+        "id": "dorm-application-ct",
+        "isScheduled": true,
+        "title": "宿舍申請(交大校區)",
+        "responsibleUnit": "住宿服務二組 / 分機:31495, 31497",
+        "details": "時間:8月4日 至 8月14日中午12點止。\n說明:大一新生保障住宿，務必在期限內至住宿服組網頁【大一新生宿舍申請】勾選要住宿或不住宿。不因申請先後順序影響宿舍分配。"
+    },
+    {
+        "category": "註冊前",
+        "id": "ust-transfer-student-reg",
+        "isScheduled": true,
+        "title": "台聯大系統暨轉校新生報到",
+        "responsibleUnit": "註冊一組 / 分機:62203, 註冊二組 / 分機:31666",
+        "details": "時間:8月11日 至 9月1日開學前。\n說明:線上完成新生資料維護後，請於開學前至註冊組辦公室繳驗學歷證件(修業證明書或畢業證書)正本、歷年成績正本等。"
+    },
+    {
+        "category": "註冊前",
+        "id": "tuition-payment-freshmen",
+        "isScheduled": true,
+        "title": "繳納學雜費(新生)",
+        "responsibleUnit": "出納一組 / 分機:62080, 出納二組 / 分機:51808",
+        "details": "時間:8月25日 至 9月3日。\n說明:請自行至學校「單一入口網頁」點選「學雜費系統」，下載列印繳費單並於期限內繳納。繳費成功3日後可下載繳費證明。"
+    },
+    {
+        "category": "註冊前",
+        "id": "course-selection-1",
+        "isScheduled": true,
+        "title": "新生選課",
+        "responsibleUnit": "課務一組 / 分機:62038, 62039, 課務二組 / 分機:50421~50425",
+        "details": "時間:8月25日中午12點 至 8月28日上午10點。\n說明:網路選課系統全天開放。有人數上限課程將於8/28上午10點後由系統隨機分發。"
+    },
+    {
+        "category": "註冊前",
+        "id": "reserve-admission",
+        "isScheduled": true,
+        "title": "申請保留入學資格",
+        "responsibleUnit": "各學系辦公室, 註冊一組/二組",
+        "details": "時間:8月29日前(含)完成辦理。\n對象:因重病、服兵役、懷孕、撫育三歲以下子女等特殊事故者。\n說明:需檢具相關證明文件，並先與系所聯繫後辦理。"
+    },
+    {
+        "category": "註冊前",
+        "id": "dual-degree-application",
+        "isScheduled": true,
+        "title": "申請雙重學籍",
+        "responsibleUnit": "各學系辦公室",
+        "details": "時間:8月29日前(含)完成。\n說明:學生得具雙重學籍，但須向系所主管或指導教授報備，並將報備單送註冊組登錄。"
+    },
+    {
+        "category": "註冊前",
+        "id": "leave-of-absence",
+        "isScheduled": true,
+        "title": "辦理休學",
+        "responsibleUnit": "各學系辦公室, 註冊一組/二組",
+        "details": "時間:9月1日(含)前辦理可免繳學雜費。\n說明:需先完成新生資料維護、繳交學歷證件取得學籍後方得辦理。請先與系所聯繫後辦理。"
+    },
+    {
+        "category": "註冊前",
+        "id": "military-service-registration",
+        "isScheduled": true,
+        "title": "辦理兵役緩徵/儘召",
+        "responsibleUnit": "軍訓室 / 陽明分機:62258, 交大分機:50704",
+        "details": "時間:即日起 至 9月1日開學前。\n說明:男同學務必於新生資料維護頁面完成服役狀況登記(未役/已役/免役)，並依指示上傳證明文件，以免在學期間收到徵集令。"
+    },
+    {
+        "category": "註冊前",
+        "id": "mental-health-survey",
+        "isScheduled": true,
+        "title": "填寫心理健康調查表",
+        "responsibleUnit": "健康心理中心",
+        "details": "時間:9月1日前填寫完成。\n說明:為關心新生身心適應狀況，請至新生資料維護系統填寫。測驗結果可於日後登入心理諮商服務系統查詢。"
+    },
+    {
+        "category": "註冊前",
+        "id": "fee-reduction",
+        "isScheduled": false,
+        "title": "辦理學雜費減免",
+        "responsibleUnit": "生活輔導一組 / 分機:62023, 生活輔導二組 / 分機:50854",
+        "details": "說明:符合資格者，相關事宜請至學生事務處生活輔導一、二組網頁【學雜費減免】項目下查詢，並依規定與期限辦理。"
+    },
+    {
+        "category": "新生輔導與體檢",
+        "id": "dorm-check-in",
+        "isScheduled": true,
+        "title": "宿舍入住",
+        "responsibleUnit": "住宿服務一組 / 分機:62307",
+        "details": "時間:8月23日 至 8月24日，上午9點至下午7點。\n說明:此為陽明校區新生宿舍入住時間，住宿生請於此期間辦理入住。"
+    },
+    {
+        "category": "新生輔導與體檢",
+        "id": "health-check-ym",
+        "isScheduled": true,
+        "title": "新生體檢(陽明校區)",
+        "responsibleUnit": "衛保組 / 分機:67212",
+        "details": "時間:8月25日。\n地點:陽明校區活動中心一樓門廳。\n費用:750元(當天繳交)。\n注意:請先線上填寫新生健康問卷，體檢前需禁食6-8小時。"
+    },
+    {
+        "category": "新生輔導與體檢",
+        "id": "department-orientation",
+        "isScheduled": true,
+        "title": "新生入學輔導",
+        "responsibleUnit": "各學系辦公室",
+        "details": "時間:8月25日 至 8月29日。\n說明:由各系所自行辦理，詳細活動請留意系所通知。"
+    },
+    {
+        "category": "新生輔導與體檢",
+        "id": "health-check-ct-domestic",
+        "isScheduled": true,
+        "title": "新生體檢(交大校區-本國籍生)",
+        "responsibleUnit": "衛保組 / 分機:51104",
+        "details": "時間:8月26日 上午8點至下午4點30分。\n地點:交大校區大禮堂。\n費用:750元(當天繳交)。\n注意:請務必依系所排定時間報到，並已線上填寫新生健康問卷。"
+    },
+    {
+        "category": "新生輔導與體檢",
+        "id": "convocation",
+        "isScheduled": true,
+        "title": "新生開學典禮",
+        "responsibleUnit": "生活輔導一組 / 分機:62212, 生活輔導二組 / 分機:50859",
+        "details": "時間:8月27日。\n說明:地點擬於114年7月底公告。"
+    },
+    {
+        "category": "新生輔導與體檢",
+        "id": "health-check-external-deadline",
+        "isScheduled": true,
+        "title": "自行校外體檢繳交期限",
+        "responsibleUnit": "衛保組",
+        "details": "期限:9月15日前完成繳交。\n說明:若無法參加校內體檢，可自行至醫療院所檢查(需符合規定項目)，並於期限前將報告及學生健康資料卡繳回衛保組。"
+    },
+    {
+        "category": "開學後",
+        "id": "class-start",
+        "isScheduled": true,
+        "title": "正式上課日",
+        "responsibleUnit": "教務處",
+        "details": "日期:114年9月1日(一)。"
+    },
+    {
+        "category": "開學後",
+        "id": "student-loan-ct",
+        "isScheduled": true,
+        "title": "就學貸款資料繳交(交大校區)",
+        "responsibleUnit": "生活輔導二組 / 分機:50856",
+        "details": "時間:9月1日 至 9月3日。\n說明:先至臺灣銀行完成對保，再至校內系統登錄，最後於期限內將申請書等文件繳至生輔二組。"
+    },
+    {
+        "category": "開學後",
+        "id": "student-loan-ym",
+        "isScheduled": true,
+        "title": "就學貸款資料繳交(陽明校區)",
+        "responsibleUnit": "生活輔導一組 / 分機:62023",
+        "details": "時間:9月1日 至 9月5日。\n說明:先至臺北富邦銀行完成對保，再至校內系統登錄，最後於期限內將申請書等文件郵寄或親送至生輔一組。"
+    },
+    {
+        "category": "開學後",
+        "id": "course-add-drop",
+        "isScheduled": true,
+        "title": "開學後加退選",
+        "responsibleUnit": "課務一組, 課務二組",
+        "details": "時間:9月1日 至 9月12日上午10點。\n說明:選課時間為每日中午12點至次日上午10點。逾期加退選需進行義務工讀。"
+    },
+    {
+        "category": "開學後",
+        "id": "credit-waiver",
+        "isScheduled": true,
+        "title": "辦理學分抵免",
+        "responsibleUnit": "註冊一組 / 分機:62203, 註冊二組 / 分機:31666",
+        "details": "時間:開學後第二週(9/12)結束前。\n說明:請檢具申請表及原就讀學校歷年成績單，至各單位審核簽章後送註冊組複審。"
+    },
+    {
+        "category": "開學後",
+        "id": "enrollment-certificate",
+        "isScheduled": false,
+        "title": "申請在學證明",
+        "responsibleUnit": "註冊一組 / 分機:62203, 註冊二組 / 分機:31666",
+        "details": "說明:繳費成功3日後，可自行至「單一入口網頁」→「學籍成績系統」內下載列印。"
+    },
+    {
+        "category": "開學後",
+        "id": "required-courses-info",
+        "isScheduled": false,
+        "title": "完成校訂必修課程",
+        "responsibleUnit": "教務處 / 性別平等教育委員會",
+        "details": "說明:\n1. 學術研究倫理教育課程: 須於入學第二學期結束前，至「臺灣學術倫理教育資源中心」平台修課並通過測驗。\n2. 性別平等教育線上訓練課程: 須於入學第一學期至本校網路教學平台修習，未完成者須於畢業前補修。"
+    },
+    {
+        "category": "其他",
+        "id": "dorm-network",
+        "isScheduled": false,
+        "title": "宿舍網路設定",
+        "responsibleUnit": "資訊技術服務中心 / 陽明分機:123, 交大分機:31888",
+        "details": "說明:本校宿舍以光纖網路連接。請將電腦網卡的IP模式改成自動取得IP(DHCP)後，即可直接上網。"
+    },
+    {
+        "category": "其他",
+        "id": "parking-permit",
+        "isScheduled": false,
+        "title": "申請汽機車停車證",
+        "responsibleUnit": "事務一組 / 分機:62214, 事務二組 / 分機:50092",
+        "details": "說明:\n- 陽明校區: 大一新生不得申請機車、汽車停車證。\n- 交大校區: 大一新生不得申請機車停車證，可申請汽車停車證。\n- 轉學生可申請。"
+    },
+    {
+        "category": "其他",
+        "id": "lab-safety-training",
+        "isScheduled": false,
+        "title": "實驗場所教育訓練",
+        "responsibleUnit": "環安中心 / 陽明分機:62195, 交大分機:52522",
+        "details": "說明:如需進入實驗場所，需依法定時數接受安全衛生教育訓練並取得證號後，方可進入操作實驗。"
+    },
+    {
+        "category": "其他",
+        "id": "personal-data-policy",
+        "isScheduled": false,
+        "title": "個人資料保護與變更",
+        "responsibleUnit": "註冊組",
+        "details": "說明:若姓名、身分證字號、地址等個人資料需變更，請至註冊組網頁下載「學籍資料異動申請表」並提出相關證明文件辦理。"
+    }
+];
+        const CATEGORY_STYLES = {
+            Registration: { name: '註冊', color: 'var(--cat-registration)' },
+            Academic: { name: '學業', color: 'var(--cat-academic)' },
+            Housing: { name: '住宿', color: 'var(--cat-housing)' },
+            Financial: { name: '財務', color: 'var(--cat-financial)' },
+            Activity: { name: '活動', color: 'var(--cat-activity)' },
+            Reduction: { name: '學費減免/優待', color: 'var(--cat-reduction)' }
+        };
+
+        // --- STATE (SHARED) ---
+        let calendarDate = new Date(); // Date for the calendar view
+        let completedTasks = new Set(JSON.parse(localStorage.getItem('completedTasksNTHU')) || []);
+        let currentView = 'calendar';
+
+        // --- DOM ELEMENTS (SHARED) ---
+        const calendarView = document.getElementById('calendar-view');
+        const listView = document.getElementById('list-view');
+        const btnCalendarView = document.getElementById('btn-calendar-view');
+        const btnListView = document.getElementById('btn-list-view');
+        
+        // --- SHARED FUNCTIONS ---
+        const handleCheckboxChange = (taskId) => {
+            if (completedTasks.has(taskId)) {
+                completedTasks.delete(taskId);
+            } else {
+                completedTasks.add(taskId);
+            }
+            localStorage.setItem('completedTasksNTHU', JSON.stringify([...completedTasks]));
+            updateView(); // Re-render the current view
+        };
+
+        // --- VIEW SWITCHING LOGIC (UNCHANGED) ---
+        const switchView = (view) => {
+            localStorage.setItem('View', view);
+            currentView = view;
+            updateView();
+        };
+
+        const updateView = () => {
+            if (currentView === 'calendar') {
+                btnCalendarView.classList.add('bg-[#53267F]', 'text-white');
+                btnCalendarView.classList.remove('bg-transparent', 'text-gray-600');
+                btnListView.classList.add('bg-transparent', 'text-gray-600');
+                btnListView.classList.remove('bg-[#53267F]', 'text-white');
+                calendarView.classList.remove('hidden');
+                listView.classList.add('hidden');
+                renderCalendarView();
+            } else {
+                btnListView.classList.add('bg-[#53267F]', 'text-white');
+                btnListView.classList.remove('bg-transparent', 'text-gray-600');
+                btnCalendarView.classList.add('bg-transparent', 'text-gray-600');
+                btnCalendarView.classList.remove('bg-[#53267F]', 'text-white');
+                listView.classList.remove('hidden');
+                calendarView.classList.add('hidden');
+                renderListView();
+            }
+        };
+
+        // --- CALENDAR VIEW LOGIC (NEW) ---
+        const renderCalendarView = () => {
+            renderOverview();
+            renderCalendar();
+            renderLegend();
+            addCalendarEventListeners();
+        };
+
+        const toUTCDate = (date) => new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+        const formatDate = (date) => date.toISOString().substring(0, 10);
+        const formatDisplayDate = (date) => `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}/${String(date.getDate()).padStart(2, '0')}`;
+        const formatTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+
+        const renderOverview = () => {
+            const displayDate = new Date();
+            document.getElementById('overview-title').textContent = `今天 (${formatDisplayDate(displayDate)}) 的待辦事項`;
+            const todaysEvents = eventsData.filter(event => {
+                const start = new Date(event.startDate.toDateString());
+                const end = new Date(event.endDate.toDateString());
+                end.setHours(23, 59, 59, 999);
+                return displayDate >= start && displayDate <= end;
+            });
+            const overviewList = document.getElementById('overview-list');
+            if (todaysEvents.length === 0) {
+                overviewList.innerHTML = '<li>今天沒有待辦事項，請查看月曆以規劃未來行程。</li>';
+                return;
+            }
+            overviewList.innerHTML = todaysEvents.map(event => `
+                <li class="overview-item ${completedTasks.has(event.id) ? 'done' : ''}" data-id="${event.id}">
+                    <input type="checkbox" data-id="${event.id}" ${completedTasks.has(event.id) ? 'checked' : ''}>
+                    <span class="item-title">${event.title}</span>
+                    <span class="category-tag" style="background-color: ${CATEGORY_STYLES[event.category]?.color || '#6c757d'}">
+                        ${CATEGORY_STYLES[event.category]?.name || event.category}
+                    </span>
+                </li>
+            `).join('');
+        };
+        
+        const renderCalendar = () => {
+            const year = calendarDate.getFullYear();
+            const month = calendarDate.getMonth();
+            document.getElementById('current-month-year').textContent = `${year}年 ${month + 1}月`;
+            const calendarGrid = document.getElementById('calendar-grid');
+            calendarGrid.innerHTML = '';
+            ['日', '一', '二', '三', '四', '五', '六'].forEach(day => {
+                calendarGrid.innerHTML += `<div class="calendar-header">${day}</div>`;
+            });
+            const firstDayOfMonth = new Date(year, month, 1);
+            const lastDayOfMonth = new Date(year, month + 1, 0);
+            const firstDateInView = toUTCDate(new Date(firstDayOfMonth.setDate(firstDayOfMonth.getDate() - firstDayOfMonth.getDay())));
+            firstDayOfMonth.setDate(1);
+            const lastDateInView = toUTCDate(new Date(lastDayOfMonth.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay()))));
+            lastDayOfMonth.setDate(lastDayOfMonth.getDate() - (6 - lastDayOfMonth.getDay()));
+            let tempDate = new Date(firstDateInView);
+            while(tempDate <= lastDateInView) {
+                const isToday = formatDate(tempDate) === formatDate(toUTCDate(new Date()));
+                const isOtherMonth = tempDate.getUTCMonth() !== month;
+                calendarGrid.innerHTML += `
+                    <div class="calendar-day ${isToday ? 'today' : ''} ${isOtherMonth ? 'other-month' : ''}" data-date="${formatDate(tempDate)}">
+                        <div class="day-number">${tempDate.getUTCDate()}</div>
+                        <div class="dots-container"></div>
+                    </div>
+                `;
+                tempDate.setUTCDate(tempDate.getUTCDate() + 1);
+            }
+            renderEventsInCalendar(year, month, firstDateInView);
+        };
+
+        const renderEventsInCalendar = (year, month, firstDateInView) => {
+            const eventLayer = document.getElementById('event-layer');
+            const calendarGrid = document.getElementById('calendar-grid');
+            if (!eventLayer || !calendarGrid) return;
+            eventLayer.innerHTML = '';
+
+            if (window.innerWidth <= 480) {
+                renderDotsForMobile(year, month);
+                return;
+            }
+
+            const monthStart = toUTCDate(new Date(year, month, 1));
+            const monthEnd = toUTCDate(new Date(year, month + 1, 0));
+            const visibleEvents = eventsData.filter(event => toUTCDate(event.startDate) <= monthEnd && toUTCDate(event.endDate) >= monthStart).sort((a, b) => (b.endDate - b.startDate) - (a.endDate - a.startDate));
+            const layout = {};
+            const eventLayoutInfo = [];
+
+            visibleEvents.forEach(event => {
+                let chunkStartDate = new Date(event.startDate);
+                while(chunkStartDate <= event.endDate) {
+                    if (chunkStartDate.getMonth() > month && chunkStartDate.getFullYear() >= year) break;
+                    if (chunkStartDate.getDay() === 0 || chunkStartDate.getTime() === event.startDate.getTime()) {
+                        let chunkEndDate = new Date(chunkStartDate);
+                        
+                        // FIX: The condition now uses toUTCDate to compare dates without time,
+                        // preventing the loop from running one extra time.
+                        while(chunkEndDate.getDay() < 6 && toUTCDate(chunkEndDate) < toUTCDate(event.endDate)) {
+                            chunkEndDate.setDate(chunkEndDate.getDate() + 1);
+                        }
+
+                        if (chunkEndDate.getMonth() === month || chunkStartDate.getMonth() === month) {
+                            let slot = 0;
+                            let slotFound = false;
+                            while(!slotFound) {
+                                let isSlotAvailable = true;
+                                let dateIterator = new Date(chunkStartDate);
+                                while(dateIterator <= chunkEndDate) {
+                                    const dateKey = formatDate(toUTCDate(dateIterator));
+                                    if(layout[dateKey] && layout[dateKey][slot]) {
+                                        isSlotAvailable = false;
+                                        break;
+                                    }
+                                    dateIterator.setDate(dateIterator.getDate() + 1);
+                                }
+                                if(isSlotAvailable) slotFound = true; else slot++;
+                            }
+                            let dateMarker = new Date(chunkStartDate);
+                            while(dateMarker <= chunkEndDate) {
+                                const dateKey = formatDate(toUTCDate(dateMarker));
+                                if(!layout[dateKey]) layout[dateKey] = [];
+                                layout[dateKey][slot] = event.id;
+                                dateMarker.setDate(dateMarker.getDate() + 1);
+                            }
+                            eventLayoutInfo.push({ event, slot, chunkStartDate, chunkEndDate });
+                        }
+                        chunkStartDate = new Date(chunkEndDate);
+                    }
+                    chunkStartDate.setDate(chunkStartDate.getDate() + 1);
+                }
+            });
+
+            const headerHeight = document.querySelector('.calendar-header').offsetHeight;
+            const eventBarHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--event-bar-height'));
+            const eventBarMargin = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--event-bar-v-margin'));
+            const totalEventHeight = eventBarHeight + eventBarMargin;
+            const weekMaxSlots = [0,0,0,0,0,0];
+            for(const dateKey in layout) {
+                const date = toUTCDate(new Date(dateKey));
+                const dayIndex = Math.round((date.getTime() - firstDateInView.getTime()) / (1000 * 3600 * 24));
+                const weekIndex = Math.floor(dayIndex / 7);
+                if(layout[dateKey] && layout[dateKey].length > weekMaxSlots[weekIndex]) {
+                    weekMaxSlots[weekIndex] = layout[dateKey].length;
+                }
+            }
+            const gridRowHeights = weekMaxSlots.map(maxSlots => 30 + (maxSlots * totalEventHeight) + 5);
+            calendarGrid.style.gridTemplateRows = `auto ${gridRowHeights.map(h => `${h}px`).join(' ')}`;
+
+            eventLayoutInfo.forEach(({ event, slot, chunkStartDate, chunkEndDate }) => {
+                const startDayOfWeek = chunkStartDate.getDay();
+                const dayIndex = Math.round((toUTCDate(chunkStartDate).getTime() - firstDateInView.getTime()) / (1000 * 3600 * 24));
+                const weekIndex = Math.floor(dayIndex / 7);
+                const eventBar = document.createElement('div');
+                eventBar.className = `event-bar ${completedTasks.has(event.id) ? 'done' : ''}`;
+                eventBar.dataset.id = event.id;
+                eventBar.textContent = event.title;
+                eventBar.style.backgroundColor = CATEGORY_STYLES[event.category]?.color || '#6c757d';
+                let top = headerHeight + (weekIndex * 1);
+                for(let i=0; i<weekIndex; i++) top += gridRowHeights[i];
+                top += (slot * totalEventHeight) + 30;
+                eventBar.style.top = `${top}px`;
+                const duration = (toUTCDate(chunkEndDate).getTime() - toUTCDate(chunkStartDate).getTime()) / (1000 * 3600 * 24) + 1;
+                eventBar.style.left = `calc(${(100 / 7) * startDayOfWeek}% + 2px)`;
+                eventBar.style.width = `calc(${(100 / 7) * duration}% - 4px)`;
+                if (formatDate(toUTCDate(event.startDate)) === formatDate(toUTCDate(chunkStartDate)) || chunkStartDate.getDay() === 0) eventBar.classList.add('start-cap');
+                if (formatDate(toUTCDate(event.endDate)) === formatDate(toUTCDate(chunkEndDate)) || chunkEndDate.getDay() === 6) eventBar.classList.add('end-cap');
+                eventLayer.appendChild(eventBar);
+            });
+        };
+
+        const renderDotsForMobile = (year, month) => {
+            const visibleEvents = eventsData.filter(event => {
+                const eventEnd = new Date(event.endDate);
+                eventEnd.setHours(23, 59, 59, 999);
+                return event.startDate <= new Date(year, month + 1, 0) && eventEnd >= new Date(year, month, 1);
+            });
+            visibleEvents.forEach(event => {
+                let iterDate = new Date(event.startDate);
+                while (iterDate <= event.endDate) {
+                    if (iterDate.getMonth() === month) {
+                        const dayCell = document.querySelector(`.calendar-day[data-date="${formatDate(toUTCDate(iterDate))}"]`);
+                        if (dayCell && !dayCell.querySelector(`.dots-container [data-id="${event.id}"]`)) {
+                            const dotContainer = dayCell.querySelector('.dots-container');
+                            const eventDot = document.createElement('div');
+                            eventDot.className = 'event-dot';
+                            eventDot.style.backgroundColor = CATEGORY_STYLES[event.category]?.color || '#6c757d';
+                            eventDot.dataset.id = event.id;
+                            dotContainer.appendChild(eventDot);
+                        }
+                    }
+                    iterDate.setDate(iterDate.getDate() + 1);
+                }
+            });
+        };
+
+        const renderLegend = () => {
+            const legendContainer = document.getElementById('calendar-legend');
+            legendContainer.innerHTML = Object.values(CATEGORY_STYLES).map(style => `
+                <div class="legend-item">
+                    <div class="legend-color-box" style="background-color: ${style.color};"></div>
+                    <span>${style.name}</span>
+                </div>
+            `).join('');
+        };
+
+        const showModal = (eventId) => {
+            const event = eventsData.find(e => e.id === eventId);
+            if (!event) return;
+            const detailsHtml = event.details.replace(/\[(.*?)\]\((.*?)\)/g, '<a style="color:blue;" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+            document.getElementById('modal-title').textContent = event.title;
+            document.getElementById('modal-body').innerHTML = `
+                <p><strong>辦理期間:</strong> ${formatDisplayDate(event.startDate)} ${formatTime(event.startDate)} - ${formatDisplayDate(event.endDate)} ${formatTime(event.endDate)}</p>
+                <p><strong>適用對象:</strong> ${event.targetAudience}</p>
+                <p><strong>重要說明:</strong> ${detailsHtml}</p>
+                <p><strong>負責單位:</strong> ${event.responsibleUnit}</p>
+            `;
+            document.getElementById('event-modal').classList.add('visible');
+        };
+
+        const closeModal = () => document.getElementById('event-modal').classList.remove('visible');
+        
+        const addCalendarEventListeners = () => {
+            const calendarViewNode = document.getElementById('calendar-view');
+            if (calendarViewNode.dataset.listenersAttached) return;
+
+            document.getElementById('prev-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() - 1);
+                renderCalendar();
+            });
+            document.getElementById('next-month-btn').addEventListener('click', () => {
+                calendarDate.setMonth(calendarDate.getMonth() + 1);
+                renderCalendar();
+            });
+            document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+            document.getElementById('event-modal').addEventListener('click', (e) => {
+                if (e.target === e.currentTarget) closeModal();
+            });
+            calendarViewNode.addEventListener('click', (e) => {
+                const eventTarget = e.target.closest('.event-bar, .event-dot, .overview-item');
+                if (eventTarget) {
+                    if (e.target.matches('input[type="checkbox"]')) return;
+                    showModal(eventTarget.dataset.id);
+                }
+            });
+            calendarViewNode.addEventListener('change', (e) => {
+                if (e.target.matches('input[type="checkbox"]')) {
+                    handleCheckboxChange(e.target.dataset.id);
+                }
+            });
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if(currentView === 'calendar') renderCalendar();
+                }, 250);
+            });
+            calendarViewNode.dataset.listenersAttached = 'true';
+        };
+
+        // --- LIST VIEW LOGIC (UNCHANGED) ---
+        const renderListView = () => {
+            const listContainer = document.getElementById('list-container');
+            const searchBox = document.getElementById('search-box');
+            listContainer.innerHTML = '';
+            const searchTerm = searchBox.value.toLowerCase();
+            const groupedData = fullListData.reduce((acc, item) => {
+                const category = item.category;
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(item);
+                return acc;
+            }, {});
+            for (const category in groupedData) {
+                const categoryContainer = document.createElement('div');
+                categoryContainer.innerHTML = `<h2 class="text-2xl font-bold text-[#53267F] border-b-2 border-[#a38db8] pb-2 mb-4">${category}</h2>`;
+                const itemsList = document.createElement('div');
+                itemsList.className = 'space-y-4';
+                let hasVisibleItems = false;
+                groupedData[category].forEach(item => {
+                    const itemText = (item.title + item.details + item.responsibleUnit).toLowerCase();
+                    if (itemText.includes(searchTerm)) {
+                        const taskCard = createTaskCard(item);
+                        itemsList.appendChild(taskCard);
+                        hasVisibleItems = true;
+                    }
+                });
+                if (hasVisibleItems) {
+                    categoryContainer.appendChild(itemsList);
+                    listContainer.appendChild(categoryContainer);
+                }
+            }
+        };
+
+        const createTaskCard = (item) => {
+            const isCompleted = completedTasks.has(item.id);
+            const card = document.createElement('div');
+            card.className = `task-item bg-white p-4 rounded-lg shadow-sm border border-gray-200 transition-opacity ${isCompleted ? 'completed' : ''}`;
+            const header = document.createElement('div');
+            header.className = 'task-header flex flex-col sm:flex-row sm:items-center sm:justify-between';
+            const leftSection = document.createElement('div');
+            leftSection.className = 'flex-grow mb-2 sm:mb-0';
+            const checkboxLabel = document.createElement('label');
+            checkboxLabel.className = 'flex items-center space-x-3 cursor-pointer';
+            checkboxLabel.innerHTML = `
+                <input type="checkbox" ${isCompleted ? 'checked' : ''} class="h-5 w-5 rounded border-gray-300 text-[#53267F] focus:ring-[#a38db8] flex-shrink-0">
+                <span class="task-title text-lg font-semibold text-gray-800">${item.title}</span>`;
+            checkboxLabel.querySelector('input').addEventListener('change', () => handleCheckboxChange(item.id));
+            leftSection.appendChild(checkboxLabel);
+            const unit = document.createElement('p');
+            unit.className = 'text-sm text-gray-500 ml-8';
+            unit.textContent = item.responsibleUnit;
+            leftSection.appendChild(unit);
+            const rightSection = document.createElement('div');
+            rightSection.className = 'flex-shrink-0 self-start sm:self-center';
+            const toggleButton = document.createElement('button');
+            toggleButton.className = 'toggle-details text-sm font-medium text-[#53267F] hover:underline flex items-center';
+            toggleButton.innerHTML = `<span class="btn-text">[+] 查看說明</span>`;
+            rightSection.appendChild(toggleButton);
+            header.appendChild(leftSection);
+            header.appendChild(rightSection);
+            const details = document.createElement('div');
+            details.className = 'task-details mt-2 pl-8';
+            const detailsHtml = item.details.replace(/\[(.*?)\]\((.*?)\)/g, '<a style="color:blue;" href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+            details.innerHTML = `<div class="bg-gray-50 p-4 rounded-md border text-gray-600 whitespace-pre-wrap">${detailsHtml}</div>`;
+            toggleButton.addEventListener('click', () => {
+                details.classList.toggle('open');
+                const btnText = toggleButton.querySelector('.btn-text');
+                btnText.textContent = details.classList.contains('open') ? '[-] 收合說明' : '[+] 查看說明';
+            });
+            card.appendChild(header);
+            card.appendChild(details);
+            return card;
+        };
+        
+        // --- APP INITIALIZATION ---
+        const init = () => {
+            // Setup listeners for non-view-specific elements
+            btnCalendarView.addEventListener('click', () => switchView('calendar'))
+            btnListView.addEventListener('click', () => switchView('list'));
+            document.getElementById('search-box').addEventListener('input', renderListView);
+            // Initial view render
+            updateView();
+        };
+        
+        init();
+        switchView(localStorage.getItem('View')||'calendar');
+        setTimeout(() => {
+            renderOverview();
+            renderCalendar();
+        }, 10);
+    });
+    </script>
+</body>
+</html>
