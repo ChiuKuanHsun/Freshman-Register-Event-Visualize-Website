@@ -921,7 +921,7 @@
         };
         
         init();
-        switchView(localStorage.getItem('View'));
+        switchView(localStorage.getItem('View')||'list');
         setTimeout(() => {
             renderOverview();
             renderCalendar();
