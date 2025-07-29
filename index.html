@@ -26,6 +26,7 @@
             --cat-academic: #28a745;
             --cat-housing: #fd7e14;
             --cat-financial: #dc3545;
+            --cat-reduction: #fd46c9;
             --cat-activity: #17a2b8;
         }
         header {
@@ -412,9 +413,10 @@
 
     <div class="main-container container mx-auto p-4 md:p-8">
         <header>
-            <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-primary)]">國立清華大學114學年度新生註冊時程<br><a href="https://registra.site.nthu.edu.tw/p/406-1211-288857,r219.php?Lang=zh-tw" style="text-decoration: underline; color: #007bff; font-size: large;">（詳情請見清大註冊組）</a> <a href="https://registra.site.nthu.edu.tw/var/file/211/1211/img/2979/557596209.pdf" style="text-decoration: underline; color: #007bff; font-size: large;">（資料來源PDF檔）</a></h1>
-
+            <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-primary)]">國立清華大學114學年度新生註冊時程<br><a href="https://registra.site.nthu.edu.tw/p/406-1211-288857,r219.php?Lang=zh-tw" target="_blank" style="text-decoration: underline; color: #007bff; font-size: large;">（詳情請見清大註冊組）</a> <a href="https://registra.site.nthu.edu.tw/var/file/211/1211/img/2979/557596209.pdf" target="_blank" style="text-decoration: underline; color: #007bff; font-size: large;">（資料來源PDF檔）</a></h1>
+            <p class="text-gray-500 mt-2">※請使用電腦進行瀏覽，如使用手機請將手機轉成橫的※ </p>
             <p class="text-gray-500 mt-2">※免責聲明：實際日程請以清大官方公告為準，本網站資料皆為作者自行整理，不負任何相關責任※ </p>
+ 
         </header>
 
         <!-- View Switcher (Untouched) -->
@@ -472,14 +474,15 @@
         const eventsData = [
             { "id": "residential-college-apply-1", "title": "申請清華書院(第一階段)", "startDate": "2025-05-12T12:00:00", "endDate": "2025-07-10T12:00:00", "category": "Housing", "targetAudience": "全體大一新生", "details": "有意申請厚德、載物、天下書院者，需至[書院網站](http://rcollege.site.nthu.edu.tw/)報名。", "responsibleUnit": "清華書院 / 分機:62559" },
             { "id": "residential-college-apply-2", "title": "申請清華書院(第二階段)", "startDate": "2025-08-04T12:00:00", "endDate": "2025-08-15T10:00:00", "category": "Housing", "targetAudience": "全體大一新生", "details": "有意申請厚德、載物、天下書院者，需至[書院網站](http://rcollege.site.nthu.edu.tw/)報名。", "responsibleUnit": "清華書院 / 分機:62559" },
+            { "id": "residential-college-checkin-2", "title": "清華書院報到(第二階段)", "startDate": "2025-08-15T18:00:00", "endDate": "2025-08-17T23:59:00", "category": "Housing", "targetAudience": "第二階段錄取清華書院者", "details": "錄取後需經過報到手續，詳情請至[書院網站](http://rcollege.site.nthu.edu.tw/)查看。", "responsibleUnit": "清華書院 / 分機:62559" },
             { "id": "reserve-admission", "title": "申請保留入學資格", "startDate": "2025-07-01T00:00:00", "endDate": "2025-08-29T23:59:59", "category": "Academic", "targetAudience": "因重病、懷孕等特殊事故無法當學年入學之新生。", "details": "需檢具有關證明於7月1日至8月29日止向教務處申請保留入學資格。", "responsibleUnit": "註冊組" },
             { "id": "residential-college-register-1", "title": "清華書院第一階段錄取報到", "startDate": "2025-07-18T12:00:00", "endDate": "2025-07-24T23:59:00", "category": "Housing", "targetAudience": "第一階段錄取清華書院之新生", "details": "錄取者須完成線上報到，逾期視同放棄。", "responsibleUnit": "清華書院 / 分機:62559" },
             { "id": "online-reg-non-exam", "title": "網路報到(非分發入學)", "startDate": "2025-08-01T10:00:00", "endDate": "2025-08-07T23:59:59", "category": "Registration", "targetAudience": "特殊選才、繁星推薦、申請入學等非分發入學之新生。", "details": "上網核對基本資料、上傳學歷文件。此階段亦須完成兵役、健康資料登錄及各項問卷填寫。若需更改姓名，務必於8/7前將戶籍謄本寄達註冊組。[校務資訊系統/新生報到](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "註冊組 / 分機:31390" },
-            { "id": "fee-reduction", "title": "辦理學雜費減免", "startDate": "2025-08-13T00:00:00", "endDate": "2025-08-19T23:59:59", "category": "Financial", "targetAudience": "符合身障、原住民、低收/中低收入戶等資格之學生。", "details": "請至校務資訊系統/學雜費減免作業填寫列印申請表，並線上繳件。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34649" },
+            { "id": "fee-reduction", "title": "辦理學雜費減免", "startDate": "2025-08-13T00:00:00", "endDate": "2025-08-19T23:59:59", "category": "Reduction", "targetAudience": "符合身障、原住民、低收/中低收入戶等資格之學生。", "details": "請至校務資訊系統/學雜費減免作業填寫列印申請表，並線上繳件。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34649" },
             { "id": "online-reg-exam", "title": "網路報到(分發入學)", "startDate": "2025-08-14T10:00:00", "endDate": "2025-08-18T23:59:59", "category": "Registration", "targetAudience": "分發入學之新生。", "details": "上網核對基本資料、上傳學歷文件。此階段亦須完成兵役、健康資料登錄及各項問卷填寫。若需更改姓名，務必於8/18前將戶籍謄本寄達註冊組。[校務資訊系統/新生報到](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "註冊組 / 分機:31390" },
             { "id": "dorm-application", "title": "申請宿舍", "startDate": "2025-08-15T16:00:00", "endDate": "2025-08-18T10:00:00", "category": "Housing", "targetAudience": "全體大一新生 (未錄取書院者)。", "details": "凡未辦理網路登記住宿申請者視同放棄住宿。[學生宿舍規則](https://sthousing.site.nthu.edu.tw/p/406-1254-105021,r1559.php?Lang=zh-tw)", "responsibleUnit": "住宿組 / 分機:34706" },
             { "id": "course-selection-1", "title": "新生選課", "startDate": "2025-08-18T12:00:00", "endDate": "2025-08-20T09:00:00", "category": "Academic", "targetAudience": "全體大一新生", "details": "網路開放時間為每日中午12:00至次日上午09:00止。可於此階段加選【開箱清華園】微學分課程。", "responsibleUnit": "課務組 / 分機:31393-5" },
-            { "id": "print-payment-bill", "title": "列印學雜費繳費單", "startDate": "2025-08-21T00:00:00", "endDate": "2025-09-01T23:59:59", "category": "Financial", "targetAudience": "全體大一新生", "details": "請同學至校務資訊系統/新生報到自行列印。辦理保留入學、休學及就學貸款同學，請勿繳費。", "responsibleUnit": "出納組 / 分機:31364" },
+            { "id": "print-payment-bill", "title": "列印學雜費繳費單", "startDate": "2025-08-21T00:00:00", "endDate": "2025-09-01T23:59:59", "category": "Financial", "targetAudience": "全體大一新生", "details": "請同學至校務資訊系統/新生報到自行列印。辦理保留入學、休學及就學貸款同學，請勿繳費。[校務資訊系統/新生報到](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "出納組 / 分機:31364" },
             { "id": "credit-waiver", "title": "辦理學分抵免", "startDate": "2025-08-01T00:00:00", "endDate": "2025-08-22T23:59:59", "category": "Academic", "targetAudience": "重考生、重新申請入學之新生等符合資格者。", "details": "務必於8月22日(五)前辦理。至「校務資訊系統」→「抵免學分」申請。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)/[學分抵免說明](https://registra.site.nthu.edu.tw/p/404-1211-5132.php)", "responsibleUnit": "註冊組 / 分機:31390" },
             { "id": "student-loan-online", "title": "就學貸款(學校系統登錄)", "startDate": "2025-08-21T09:00:00", "endDate": "2025-09-01T16:00:00", "category": "Financial", "targetAudience": "欲申請就學貸款之學生。", "details": "需先至臺灣銀行各分行辦理對保手續。再至校務資訊系統/就學貸款登錄申請資料。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34660" },
             { "id": "dorm-check-in", "title": "宿舍入住", "startDate": "2025-08-24T08:30:00", "endDate": "2025-08-25T16:00:00", "category": "Housing", "targetAudience": "全體住宿新生。", "details": "至各新生齋舍報到。[學生宿舍規則](https://sthousing.site.nthu.edu.tw/p/406-1254-105021,r1559.php?Lang=zh-tw)", "responsibleUnit": "住宿組 / 分機:34706" },
@@ -489,8 +492,8 @@
             { "id": "tuition-payment", "title": "繳交學雜費", "startDate": "2025-08-21T00:00:00", "endDate": "2025-09-01T23:59:59", "category": "Financial", "targetAudience": "全體大一新生 (未辦理學貸、休學者)。", "details": "學生應於本校行事曆規定之上課開始日(含)前繳交各項應繳費用。繳費完成後即完成註冊。", "responsibleUnit": "出納組 / 分機:31364" },
             { "id": "class-start", "title": "正式上課日", "startDate": "2025-09-01T08:00:00", "endDate": "2025-09-01T23:59:59", "category": "Academic", "targetAudience": "全體大一新生", "details": "9月1日(星期一)開始上課。", "responsibleUnit": "教務處" },
             { "id": "parents-symposium", "title": "新生家長座談會", "startDate": "2025-08-24T14:00:00", "endDate": "2025-08-24T16:00:00", "category": "Activity", "targetAudience": "新生家長", "details": "歡迎各位學生家長蒞臨，深入了解學校的學習環境和生活設施。地點：校本部旺宏館國際會議廳", "responsibleUnit": "生輔組 / 分機:34647" },
-            { "id": "civil-servant-benefit-online", "title": "公教遺族就學優待(線上申請)", "startDate": "2025-08-13T00:00:00", "endDate": "2025-08-19T23:59:59", "category": "Financial", "targetAudience": "符合公教遺族資格之學生", "details": "欲申請者請先至生輔組網頁下載申請書，並至〈校務資訊系統/學雜費減免作業〉完成減免申請。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34649" },
-            { "id": "civil-servant-benefit-submit", "title": "公教遺族就學優待(紙本繳件)", "startDate": "2025-08-20T00:00:00", "endDate": "2025-09-05T23:59:59", "category": "Financial", "targetAudience": "已完成線上申請公教遺族就學優待之學生", "details": "於9月5日(五)前，將教育部軍公教遺族就學優待申請書等相關紙本文件繳交至生輔組。", "responsibleUnit": "生輔組 / 分機:34649" }
+            { "id": "civil-servant-benefit-online", "title": "公教遺族就學優待(線上申請)", "startDate": "2025-08-13T00:00:00", "endDate": "2025-08-19T23:59:59", "category": "Reduction", "targetAudience": "符合公教遺族資格之學生", "details": "欲申請者請先至生輔組網頁下載申請書，並至〈校務資訊系統/學雜費減免作業〉完成減免申請。[校務資訊系統](https://www.ccxp.nthu.edu.tw/ccxp/INQUIRE/)", "responsibleUnit": "生輔組 / 分機:34649" },
+            { "id": "civil-servant-benefit-submit", "title": "公教遺族就學優待(紙本繳件)", "startDate": "2025-08-20T00:00:00", "endDate": "2025-09-05T23:59:59", "category": "Reduction", "targetAudience": "已完成線上申請公教遺族就學優待之學生", "details": "於9月5日(五)前，將教育部軍公教遺族就學優待申請書等相關紙本文件繳交至生輔組。", "responsibleUnit": "生輔組 / 分機:34649" }
         ].map(e => ({...e, startDate: new Date(e.startDate), endDate: new Date(e.endDate)}));
 
         const fullListData = [
@@ -529,6 +532,7 @@
             Housing: { name: '住宿', color: 'var(--cat-housing)' },
             Financial: { name: '財務', color: 'var(--cat-financial)' },
             Activity: { name: '活動', color: 'var(--cat-activity)' },
+            Reduction: { name: '學費減免/優待', color: 'var(--cat-reduction)' }
         };
 
         // --- STATE (SHARED) ---
